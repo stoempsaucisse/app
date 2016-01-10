@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions;
+namespace Microffice\Exceptions;
 
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;

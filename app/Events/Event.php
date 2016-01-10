@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace Microffice\Events;
 
 abstract class Event
 {

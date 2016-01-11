@@ -14,7 +14,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // Disabled since using middleware for all routes
+        // $this->middleware('auth');
     }
 
     /**

@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Disabled to force authentication middleware
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +28,30 @@ Route::get('/', function () {
 */
 
 Route::group(['middleware' => 'web'], function () {
-    Route::auth();
+    // Replacing
+    // Route::auth();
+    // with separted routes to disable registration
+    // Authentication Routes...
+    $this->get('login', 'Auth\AuthController@showLoginForm');
+    $this->post('login', 'Auth\AuthController@login');
+    $this->get('logout', 'Auth\AuthController@logout');
+    // Registration Routes...
+    // $this->get('register', 'Auth\AuthController@showRegistrationForm');
+    // $this->post('register', 'Auth\AuthController@register');
+    // Password Reset Routes...
+    $this->get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
+    $this->post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
+    $this->post('password/reset', 'Auth\PasswordController@reset');
 
-    Route::get('/home', 'HomeController@index');
+    /*
+     * Routes that need authentication
+     *
+     **************************************************************************/
+
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('/', function () {
+            return view('welcome');
+        });
+        Route::get('/home', 'HomeController@index');
+    });
 });

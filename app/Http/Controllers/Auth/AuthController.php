@@ -31,6 +31,13 @@ class AuthController extends Controller
     protected $redirectTo = '/';
 
     /**
+     * The attribute to use for authentication [email | name] (default is email).
+     *
+     * @var string
+     */
+    protected $username = 'name';
+
+    /**
      * Create a new authentication controller instance.
      *
      * @return void

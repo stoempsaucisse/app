@@ -9,8 +9,9 @@
 ')
 @section('content')
 <h1>Reset your password, please.</h1>
-<form method="POST" action="{{ url('/password/email') }}">
+<form method="POST" action="{{ url('/password/reset') }}">
                 {!! csrf_field() !!}
+                <input type="hidden" name="token" value="{{ $token }}">
                 <input class="stacked first" type="text" name="email" value="{{ $email or old('email') }}" placeholder="Email">
                 <input class="stacked" type="password" name="password" placeholder="Password">
                 <input class="stacked" type="password" name="password_confirmation" placeholder="Confirm Password">

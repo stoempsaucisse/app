@@ -1,66 +1,22 @@
-@extends('layouts.app')
-
+@extends('html')@section('title', 'Login')@section('meta')
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="UTF-8" />
+@endsection
+@section('style')
+<link rel='stylesheet' href='{{ secure_asset("assets/auth/main.css") }}' type='text/css' />
+@endsection
+@section('js', '
+')
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
-                        {!! csrf_field() !!}
-
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Name</label>
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
-
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input type="password" class="form-control" name="password">
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember"> Remember Me
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-sign-in"></i>Login
-                                </button>
-
-                                <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
-                            </div>
-                        </div>
-                    </form>
+<h1>Welcome to microffice, please log in.</h1>
+<form method="POST" action="{{ url('/login') }}">
+                {!! csrf_field() !!}
+                <input class="stacked first" type="text" name="name" value="{{ old('name') }}" placeholder="Name">
+                <input class="stacked" type="password" name="password" id="password" placeholder="Password">
+                <label class="input stacked" for="remember">Remember Me <input id="remember" type="checkbox" name="remember" /></label>
+                <div class="form-footer">
+                    <button id="login" type="submit">Login</button>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+            </form>
+            <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
 @endsection

@@ -1,0 +1,81 @@
+/* Default colors */
+/* Form colors */
+/* Errors colors */
+/*Basic reset*/
+/** 1. Set default font family to TheanoDidot_ttf, sans-serif. 2. Prevent iOS text size adjust after orientation change, without disabling user zoom. */
+html { font-family: Verdana, sans-serif; /* 1 */ -ms-text-size-adjust: 100%; /* 2 */ -webkit-text-size-adjust: 100%; /* 2 */ }
+
+/** Remove default margin. */
+body { margin: 0; }
+
+/* HTML5 display definitions ======================================================================= */
+/** Correct `block` display not defined for any HTML5 element in IE 8/9. Correct `block` display not defined for `main` in IE 11. */
+footer, header, main { display: block; }
+
+/** Remove the gray background color from active links in IE 10. */
+a { background-color: transparent; }
+
+/** Improve readability when focused and also mouse hovered in all browsers. */
+a:active, a:hover { outline: 0; }
+
+/* Forms ========================================================================== */
+/** Known limitation: by default, Chrome and Safari on OS X allow very limited styling of `select`, unless a `border` property is set. */
+/** 1. Correct color not being inherited. Known issue: affects color of disabled elements. 2. Correct font properties not being inherited. 3. Address margins set differently in Firefox 4+, Safari, and Chrome. */
+button, input { color: inherit; /* 1 */ font: inherit; /* 2 */ margin: 0; /* 3 */ }
+
+/** Address `overflow` set to `hidden` in IE 8/9/10/11. */
+button { overflow: visible; }
+
+/** Address inconsistent `text-transform` inheritance for `button` and `select`. All other form control elements do not inherit `text-transform` values. Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera. Correct `select` style inheritance in Firefox. */
+button { text-transform: none; }
+
+/** 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio` and `video` controls. 2. Correct inability to style clickable `input` types in iOS. 3. Improve usability and consistency of cursor style between image-type `input` and others. */
+button, html input[type="button"], input[type="submit"] { -webkit-appearance: button; /* 2 */ cursor: pointer; /* 3 */ }
+
+/** Remove inner padding and border in Firefox 4+. */
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+
+/** Address Firefox 4+ setting `line-height` on `input` using `!important` in the UA stylesheet. */
+button, input { line-height: normal; }
+
+/** It's recommended that you don't attempt to style these elements. Firefox's implementation doesn't respect box-sizing, padding, or width.  1. Address box sizing set to `content-box` in IE 8/9/10. 2. Remove excess padding in IE 8/9/10. */
+input[type="checkbox"] { box-sizing: border-box; /* 1 */ padding: 0; /* 2 */ }
+
+/** Define consistent border, margin, and padding. */
+fieldset { border: 1px solid #c0c0c0; margin: 0 2px; padding: 0.35em 0.625em 0.75em; }
+
+/** 1. Correct `color` not being inherited in IE 8/9/10/11. 2. Remove padding so people aren't caught out if they zero out fieldsets. */
+legend { border: 0; /* 1 */ padding: 0; /* 2 */ }
+
+/*End Basic reset*/
+/* ========================================================================== */
+html { font-size: 62.5%; color: #000; }
+
+body { font-size: 1.5em; line-height: 1.618em; font-weight: 400; }
+
+h1 { font-size: 1.7rem; line-height: 2.8rem; text-align: center; }
+
+main { display: block; width: 100%; }
+
+label, input, button { color: #000; border: 1px solid green; padding: 7px; box-sizing: border-box; }
+
+label.stacked, input.stacked { border-top-width: 0px; display: block; }
+
+label.stacked.first, input.stacked.first { border-top-width: 1px; }
+
+input[type="checkbox"] { border: 1px solid green; }
+
+input { width: 100%; }
+
+div.form-footer { margin-top: 33px; width: 100%; background-color: red; }
+
+input[type='checkbox'] { width: auto; float: right; margin-top: 2.9px; margin-right: 5px; }
+
+label[for='remember'] { display: block; line-height: 18px; }
+
+#login { width: 100%; }
+
+/* Adapt to desktop screens */
+@media only screen and (min-width: 300px) { main { max-width: 300px; margin: 100px auto; } }
+
+/*# sourceMappingURL=main.css.map */

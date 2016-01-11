@@ -1,0 +1,52 @@
+@import '../fonts';
+@import '../colors';
+@import 'reset';
+html {
+    font-size: 62.5%;
+    color: $color;
+}
+body {
+    font-size: 1.5em;
+    line-height: 1.618em;
+    font-weight: 400;
+}
+h1 {
+    font-size: 1.7rem;
+    line-height: 2.8rem;
+    text-align: center;
+}
+main {
+    display: block;
+    width: 100%;
+}
+@import '../basic-form';
+
+input {
+    width: 100%;
+}
+div.form-footer {
+    margin-top: 33px;
+    width: 100%;
+    background-color: red;
+}
+input[type='checkbox'] {
+    width: auto;
+    float: right;
+    margin-top: 2.9px;
+    margin-right: 5px;
+}
+label[for='remember'] {
+    display: block;
+    line-height: 18px;
+}
+#login {
+    width: 100%;
+}
+
+/* Adapt to desktop screens */
+@media only screen and (min-width: 300px) {
+    main {
+        max-width: 300px;
+        margin: 100px auto;
+    }
+}

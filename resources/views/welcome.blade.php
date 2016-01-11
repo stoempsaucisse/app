@@ -1,17 +1,13 @@
-@extends('layouts.app')
-
+@extends('html')@section('title', 'Welcome')@section('meta')
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="UTF-8" />
+@endsection
+@section('style')
+<link rel='stylesheet' href='{{ secure_asset("assets/auth/main.css") }}' type='text/css' />
+@endsection
+@section('js', '
+')
 @section('content')
-<div class="container spark-screen">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">Welcome</div>
-
-                <div class="panel-body">
-                    Your Application's Landing Page.
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<h1>Hi {{ Auth::user()->name }}, welcome to microffice.</h1>
+<a href="{{ url('/logout') }}">Logout</a>
 @endsection

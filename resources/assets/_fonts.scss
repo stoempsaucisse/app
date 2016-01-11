@@ -1,0 +1,16 @@
+$import-font-name-01: '';
+@if $import-font-name-01 != '' {
+@font-face {
+    font-family: $import-font-name-01;
+    src: url(../#{$import-font-name-01}.ttf) format("truetype");
+}
+}
+
+$text-body-font-stack: Verdana, sans-serif;
+$heading-font-stack: $text-body-font-stack;
+$h1-font-stack: $heading-font-stack;
+$h2-font-stack: $heading-font-stack;
+$h3-font-stack: $heading-font-stack;
+$h4-font-stack: $heading-font-stack;
+$h5-font-stack: $heading-font-stack;
+$h6-font-stack: $heading-font-stack;

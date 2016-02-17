@@ -3,25 +3,30 @@
 namespace Microffice\Http\Controllers\Auth;
 
 use Microffice\User;
+use DB;
 use Validator;
 use Microffice\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+// use Microffice\Http\Controllers\Auth\AuthenticatesUsers;
+// use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Registration & Login Controller
+    | Login Controller
     |--------------------------------------------------------------------------
     |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
+    | This controller handles the authentication of existing users.
+    | By default, this controller uses
     | a simple trait to add these behaviors. Why don't you explore it?
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesUsers, ThrottlesLogins;
+    // use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
      * Where to redirect users after login / registration.
@@ -31,11 +36,13 @@ class AuthController extends Controller
     protected $redirectTo = '/';
 
     /**
-     * The attribute to use for authentication [email | name] (default is email).
+     * The attribute to use for authentication 
+     * [email | name | login] (default is email)
+     * login means that both are allowed).
      *
      * @var string
      */
-    protected $username = 'name';
+    protected $username = 'login';
 
     /**
      * Create a new authentication controller instance.
@@ -48,6 +55,26 @@ class AuthController extends Controller
     }
 
     /**
+     * Get the needed authorization credentials from the request.
+     * This has been modified to allow both login types aka. 'name' and 'email'
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function getCredentials(Request $request)
+    {
+        if( $this->loginUsername() == 'login' ) {
+            $credentials = $request->only('password');
+            $validator = $this->getValidationFactory()->make(['login' => $request->input('login')], ['login' => 'email'], [], []);
+            $login = $validator->fails() ? 'name' : 'email';
+            $credentials[$login] = $request->input('login');
+            return $credentials;
+        } else {
+            return $request->only($this->loginUsername(), 'password');
+        }
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -55,11 +82,7 @@ class AuthController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
-        ]);
+        return Validator::make($data, User::$rules);
     }
 
     /**

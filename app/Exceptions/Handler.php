@@ -2,13 +2,20 @@
 
 namespace Microffice\Exceptions;
 
+use Auth;
 use Exception;
+use Log;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Illuminate\Foundation\Validation\ValidationException;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
+
+
+use Illuminate\Routing\UrlGenerator;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +53,23 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException )
+        {
+            // Retrieving the Session Id
+            $laravel_session = Crypt::decrypt(request()->cookie('laravel_session'));
+            // Caching requested URL with this Session Id as key
+            // to throw a warning on redirected page
+            Cache::put($laravel_session . '_NotFoundHttpException', $request->url(), 1);
+            // Retrieving last visited page
+            $last_visited_page = Cache::pull($laravel_session . '_PreviousURL');
+            return redirect($last_visited_page);
+        } elseif ($e instanceof AuthorizationException) {
+            Log::error('Unautorized action from user: ' . Auth::user()->id . '. Route: ' . request()->path() . '. Method: ' . request()->method() . '.');
+            return back()->withErrors($e->getMessage());
+        } elseif ($e instanceof ModelNotFoundException) {
+            Log::info('ModelNotFoundException from user: ' . Auth::user()->id . '. Route: ' . request()->path() . '. Method: ' . request()->method() . '.');
+            $e = new HttpException(404, $e->getModel());
+        }
         return parent::render($request, $e);
     }
 }

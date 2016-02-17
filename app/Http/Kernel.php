@@ -15,6 +15,8 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        // This middleware adds previous page tracking to use when handling NotFoundHttpException
+        Middleware\LastVisitedPage::class,
     ];
 
     /**

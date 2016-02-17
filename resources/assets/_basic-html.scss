@@ -1,0 +1,22 @@
+html {
+    font-family: $text-body-font-stack, sans-serif;
+    font-size: 62.5%;
+    color: $color;
+}
+body {
+  font-size: 1.5em;
+  line-height: 1.618em;
+  font-weight: 400;
+}
+a {
+    text-decoration: none;
+    color: $color;
+}
+a.disabled {
+  cursor: default;
+  background-color: $bg-color;
+}
+ul {
+    list-style: none;
+    padding: 0px;
+}

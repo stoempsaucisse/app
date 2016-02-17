@@ -1,15 +1,7 @@
 @import '../fonts';
 @import '../colors';
-@import 'reset';
-html {
-    font-size: 62.5%;
-    color: $color;
-}
-body {
-    font-size: 1.5em;
-    line-height: 1.618em;
-    font-weight: 400;
-}
+@import '../basic-html';
+@import 'vars';
 h1 {
     font-size: 1.7rem;
     line-height: 2.8rem;
@@ -19,8 +11,9 @@ main {
     display: block;
     width: 100%;
 }
-@import '../basic-form';
 
+/* Form formating */
+@import '../basic-form';
 input {
     width: 100%;
 }
@@ -50,3 +43,4 @@ label[for='remember'] {
         margin: 100px auto;
     }
 }
+@import '../errors';

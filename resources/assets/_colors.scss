@@ -1,12 +1,19 @@
-/* Default colors */
+// Default colors
 $color: #000;
 $border-color: #000;
+$bg-color: darken(#fff, 15%);
 
-/* Form colors */
+// Form colors
 $form-color: $color;
 $input-border-color: green;
 
-/* Errors colors */
+// Errors colors
 $error-color: red;
-$error-border-color: red;
-$error-bg-color: pink;
+$error-border-color: darken($error-color, 30%);
+$error-bg-color: lighten($error-color, 30%);
+$warning-color: yellow;
+$warning-border-color: darken($warning-color, 30%);
+$warning-bg-color: lighten($warning-color, 30%);
+$info-color: #05A;
+$info-border-color: darken($info-color, 30%);
+$info-bg-color: lighten($info-color, 30%);

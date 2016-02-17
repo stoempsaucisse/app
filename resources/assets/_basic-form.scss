@@ -2,7 +2,9 @@ label,
 input,
 button {
     color: $form-color;
-    border: 1px solid $input-border-color;
+    border-style: $input-border-style;
+    border-width: $input-border-width-stack;
+    border-color: $input-border-color;
     padding: 7px;
     box-sizing : border-box;
 }
@@ -13,12 +15,5 @@ input.stacked {
 }
 label.stacked.first,
 input.stacked.first {
-    border-top-width: 1px;
-}
-input[type="checkbox"] {
-    border: 1px solid $input-border-color;
-}
-button,
-input[type="button"],
-input[type="submit"] {
+    border-top-width: $input-border-width;
 }

@@ -1,0 +1,17 @@
+/* Error handling */
+#error {
+    display: block;
+    position: fixed;
+    top: 300px;
+    left: -150px;
+    margin-left: 50%;
+    width: inherit;
+    background-color: red;
+}
+
+/* Adapt to desktop screens */
+@media only screen and (min-width: 300px) {
+    #error {
+        max-width: 300px;
+    }
+}

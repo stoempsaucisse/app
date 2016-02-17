@@ -1,12 +1,38 @@
 $import-font-name-01: '';
 @if $import-font-name-01 != '' {
-@font-face {
-    font-family: $import-font-name-01;
-    src: url(../#{$import-font-name-01}.ttf) format("truetype");
+    @font-face {
+        font-family: $import-font-name-01;
+        src: url(../#{$import-font-name-01}.ttf) format("truetype");
+    }
 }
+$import-font-name-02: '';
+@if $import-font-name-02 != '' {
+    @font-face {
+        font-family: $import-font-name-02;
+        src: url(../#{$import-font-name-02}.ttf) format("truetype");
+    }
+}
+$import-font-name-03: '';
+@if $import-font-name-03 != '' {
+    @font-face {
+        font-family: $import-font-name-03;
+        src: url(../#{$import-font-name-03}.ttf) format("truetype");
+    }
+}
+$import-font-name-04: '';
+@if $import-font-name-04 != '' {
+    @font-face {
+        font-family: $import-font-name-04;
+        src: url(../#{$import-font-name-04}.ttf) format("truetype");
+    }
 }
 
-$text-body-font-stack: Verdana, sans-serif;
+$brand-primary-font-stack: Verdana, sans-serif;
+$brand-secondary-font-stack: $brand-primary-font-stack;
+$brand-tertiary-font-stack: $brand-primary-font-stack;
+
+$text-body-font-stack: $brand-primary-font-stack;
+
 $heading-font-stack: $text-body-font-stack;
 $h1-font-stack: $heading-font-stack;
 $h2-font-stack: $heading-font-stack;
@@ -14,3 +40,16 @@ $h3-font-stack: $heading-font-stack;
 $h4-font-stack: $heading-font-stack;
 $h5-font-stack: $heading-font-stack;
 $h6-font-stack: $heading-font-stack;
+
+$nav-primary-font-stack: $text-body-font-stack;
+$nav-secondary-font-stack: $nav-primary-font-stack;
+$nav-tertiary-font-stack: $nav-primary-font-stack;
+
+$link-font-stack: $text-body-font-stack;
+
+$form-label-font-stack: $text-body-font-stack;
+$form-input-font-stack: $form-label-font-stack;
+
+$error-font-stack: $text-body-font-stack;
+$warning-font-stack: $error-font-stack;
+$info-font-stack: $error-font-stack;

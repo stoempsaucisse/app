@@ -1,0 +1,36 @@
+@import 'fonts';
+@import 'colors';
+@import 'basic-html';
+h1 {
+    font-size: 1.7rem;
+    line-height: 2.8rem;
+    text-align: center;
+}
+main {
+    display: block;
+    width: 100%;
+}
+a.user-list {
+    display: block;
+    border: 1px solid $border-color;
+    margin-bottom: 10px;
+}
+a.user-list > img.avatar {
+    height: 80px;
+    width: 80px;
+    z-index: -100;
+}
+a.user-list > span {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+/* Adapt to desktop screens */
+@media only screen and (min-width: 300px) {
+    main {
+        max-width: 300px;
+        margin: 100px auto;
+    }
+}
+@import 'errors';

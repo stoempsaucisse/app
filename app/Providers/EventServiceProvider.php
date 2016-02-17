@@ -13,9 +13,17 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Microffice\Events\SomeEvent' => [
-            'Microffice\Listeners\EventListener',
-        ],
+        // 'Microffice\Events\ViewPrepare' => [
+        //     'Microffice\Listeners\PrepareView',
+        // ],
+    ];
+
+    /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [
     ];
 
     /**
@@ -28,6 +36,42 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot($events);
 
-        //
+        
+        // $events->listen('user.user:after', function($view){
+        //     return 'user.chatLink';
+        // });
+        // $events->listen('user.user:after', function($view){
+        //     // Stub to test without return value
+        //     // This mean we may add logic to determine the return value
+        //     // Example : check if user has contact => return contact.contact view
+        //     $user = $view->offsetGet('user');
+        //     if($user->name == 'Dworkin')
+        //     {
+        //         return 'user.avatar';
+        //     }
+        // });
+        // Testing with return is array.
+        // $events->listen('user.user:compose', function($view){
+        //     return ['before' => 'user.avatar',
+        //         'after' => ['user.chatLink'],
+        //         'test' => ['toto', 'tete']];
+        // });
+        // $events->listen('user.form:before', function($view){
+        //     return 'user.avatar-form';
+        // });
+        // $events->listen('user.user:compose', function($view){
+        //     return ['after' => 'user.chatLink',
+        //         'test' => ['tata', 'titi']];
+        // });
+        // $events->listen('user.user:before', function($view){
+        //     // Stub to test without return value
+        //     // This mean we may add logic to determine the return value
+        //     // Example : check if user has contact => return contact.contact view
+        //     $user = $view->offsetGet('user');
+        //     if($user->name == 'Dworkin')
+        //     {
+        //         return 'user.avatar';
+        //     }
+        // });
     }
 }

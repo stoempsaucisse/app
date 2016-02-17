@@ -13,7 +13,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Bind :before and :after data to any view.
+        view()->composer('*', 'Microffice\Http\ViewComposers\BaseComposer');
+
+        // Bind view specific data.
+        // view()->composer('user.avatar', 'Microffice\Http\ViewComposers\UserComposer@avatar');
     }
 
     /**

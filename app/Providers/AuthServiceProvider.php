@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'Microffice\Model' => 'Microffice\Policies\ModelPolicy',
+        'Microffice\User' => 'Microffice\Policies\UserPolicy',
     ];
 
     /**

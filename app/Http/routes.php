@@ -47,11 +47,10 @@ Route::group(['middleware' => 'web'], function () {
      * Routes that need authentication
      *
      **************************************************************************/
-
     Route::group(['middleware' => 'auth'], function () {
-        Route::get('/', function () {
-            return view('welcome');
-        });
+        Route::get('/', 'HomeController@welcome');
         Route::get('/home', 'HomeController@index');
+        // User routes
+        Route::resource('user', 'UserController', ['except' => ['edit']]);
     });
 });

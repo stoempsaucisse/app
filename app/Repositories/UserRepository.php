@@ -42,9 +42,9 @@ class UserRepository
     {
         if(Gate::denies('findAll', User::class))
         {
-            return User::find($this->allowedIds());
+            return User::find($this->allowedIds())->sortBy('name');
         }
-        return User::all();
+        return User::all()->sortBy('name');
     }
 
     /**

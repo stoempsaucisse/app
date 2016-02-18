@@ -28,12 +28,10 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     */
     protected function setDB($database)
     {
+        Config::set('database.default', $database);
         if($database == 'sqlite' || $database == 'sqlite_memory')
         {
-            Config::set('database.default', $database);
             Artisan::call('migrate:refresh');
-        } else {
-            Config::set('database.default', 'mysql');
         }
     }
 

@@ -3,7 +3,6 @@
 namespace Microffice\Http\Controllers\Auth;
 
 use Microffice\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class PasswordController extends Controller
 {

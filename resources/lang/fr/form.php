@@ -11,8 +11,10 @@ return [
     | messages that we need to display to the user.
     |
     */
-    'save' => 'enregistrer',
-    'reset' => 'M-à-Z',
-    'delete' => 'suprimer',
+    'save' => 'Enregistrer',
+    'reset' => 'Réinitialiser',
+    'delete' => 'Suprimer',
+    'send' => 'Envoyer',
+    'email' => 'Email',
 
 ];

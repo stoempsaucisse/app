@@ -17,8 +17,6 @@ return [
     'edit' => 'Modifier les données de :',
     'update' => 'Modifier les données de :',
     'name' => 'Nom d\'utilisateur',
-    'password' => 'Mot de passe',
-    'confirm_password' => 'Confirmation mot de passe',
     'fieldset-legend' => 'Utilisateur'
 
 ];

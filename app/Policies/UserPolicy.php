@@ -67,6 +67,30 @@ class UserPolicy
     }
 
     /**
+     * Determine if the current authenticated user may update this $userId's name
+     * Thus himself
+     *
+     * @return bool
+     */
+    public function updateName(User $user, $policyClass, $userId)
+    {
+        //  This is a stub, waiting for a real role + perms implementation
+        return $user->id == $userId;
+    }
+
+    /**
+     * Determine if the current authenticated user may update this $userId's password
+     * Thus himself
+     *
+     * @return bool
+     */
+    public function updatePassword(User $user, $policyClass, $userId)
+    {
+        //  This is a stub, waiting for a real role + perms implementation
+        return $user->id == $userId;
+    }
+
+    /**
      * Determine if the current authenticated user may delete users
      *
      * @return bool

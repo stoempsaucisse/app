@@ -2,6 +2,8 @@
 
 namespace Microffice;
 
+use Microffice\Traits\UpdateRules;
+
 use Illuminate\Auth\Authenticatable;
 use Jenssegers\Mongodb\Eloquent\Model;/*/
 use Illuminate\Database\Eloquent\Model;/**/
@@ -16,7 +18,7 @@ class User extends Model implements
     AuthorizableContract,
     CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+    use UpdateRules, Authenticatable, Authorizable, CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -37,9 +39,9 @@ class User extends Model implements
     ];
 
     /**
-    * Validation Rules
-    * @var array
-    */
+     * Validation Rules
+     * @var array
+     */
     public static $rules = array(
         'name' => 'required|max:255|unique:users',
         'email' => 'required|email|max:255|unique:users',

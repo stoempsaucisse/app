@@ -56,7 +56,8 @@ class UserRepository
     // THIS IS A STUB and should provide a real array of ids.
     public function allowedIds()
     {
-        return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        return ['56c5e90e13e75775128b456e', '56c5e90e13e75775128b456d'];
+        /*/return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];/**/
     }
     
     /**
@@ -100,10 +101,11 @@ class UserRepository
         {
             throw new AuthorizationException(trans('error.create', ['resource' => trans_choice('user.user', 1)]), 403);
         }
-        $this->events->fire('user:create');
         // Validate $data
         $this->validate($data);
         $user = User::create(['name' => $data['name'], 'email' => $data['email'], 'password' => bcrypt($data['password'])]);
+        // Fire create event
+        $this->events->fire('user:create', [$user]);
         return $user;
     }
 
@@ -124,11 +126,15 @@ class UserRepository
         $user = User::findOrFail($userId);
         // Fire update event for this user
         $this->events->fire('user:update', [$user]);
-        // Get validation rules for data fields that are present
-        // and remove unique:* rules to prevent validation to fail when
-        // some values haven't changed.
-        $rules =  array_intersect_key($this->removeUniqueRules($user, $data, User::$rules), $data);
-        // Validate $data
+
+        // Gather update rules
+        $rules = $user->updateRules();
+        // Remove password rules if password is not updated
+        if(! isset($data['password']))
+        {
+            unset($rules['password']);
+        }
+        // Validate data
         $this->validate($data, $rules);
         // Remove data that has not changed
         foreach ($data as $key => $value)
@@ -139,31 +145,11 @@ class UserRepository
             }
         }
         // Encrypt password
-        if(array_key_exists('password', $data))
+        if(isset($data['password']))
         {
             $data['password'] = bcrypt($data['password']);
-            unset($data['password_confirmation']);
         }
         return $user->update($data);
-    }
-
-    /**
-     * Remove the 'unique' rules when new data is same as old data.
-     *
-     * @param  integer $userId
-     * @param  array validated $data
-     * @return bool
-     */
-    protected function removeUniqueRules($user, $data, $rules)
-    {
-        foreach ($data as $key => $value)
-        {
-            if($user->$key == $data[$key])
-            {
-                $rules[$key] = preg_replace('/\|?unique:\w+\|?/i', '', $rules[$key]);
-            }
-        }
-        return $rules;
     }
 
     /**

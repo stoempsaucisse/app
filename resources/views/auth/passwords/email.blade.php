@@ -8,7 +8,7 @@
 @section('js', '
 ')
 @section('content')
-            <h1>{{ trans('auth.password-send') }}</h1>
+            <h1>{!! trans('auth.password-send') !!}</h1>
             @if (session('status'))
                 <div class="alert alert-success">
                     {{ session('status') }}
@@ -16,9 +16,9 @@
             @endif
             <form method="POST" action="{{ url('/password/email') }}">
                 {!! csrf_field() !!}
-                <input class="" type="text" name="email" value="{{ old('email') }}" placeholder="{{ trans('form.email') }}">
+                <input class="" type="text" name="email" value="{{ old('email') }}" placeholder="{!! trans('form.email') !!}">
                 <div class="form-footer">
-                    <button id="login" type="submit">{{ trans('form.send') }}</button>
+                    <button id="login" type="submit">{!! trans('form.send') !!}</button>
                 </div>
             </form>
 @endsection

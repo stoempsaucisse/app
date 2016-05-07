@@ -8,5 +8,5 @@
 @section('js', '
 ')
 @section('content')
-<h1>{{ trans('error.503') }}</h1>
+<h1>{!! trans('error.503') !!}</h1>
 @endsection

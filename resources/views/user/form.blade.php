@@ -16,17 +16,17 @@
 
             </form>
             <span class='form-buttons'>
-                <button type='submit' form='{{ $action }}-user' >{{ trans('form.save') }}</button>
-                <button type='reset' form='{{ $action }}-user' >{{ trans('form.reset') }}</button>
+                <button type='submit' form='{{ $action }}-user' >{!! trans('form.save') !!}</button>
+                <button type='reset' form='{{ $action }}-user' >{!! trans('form.reset') !!}</button>
                 @if( $action == 'update' )
                     @can('delete', [Microffice\User::class, $user->id])
                     <form id='delete-user' class="" method="POST" action="{{ action('UserController@destroy', ['id' => $user->id]) }}">
                         {{ method_field('DELETE') }}
                         {{ csrf_field() }}
-                        <button type='submit' ><span id='delete-button'>{{ trans('form.delete') }}<span></button>
+                        <button type='submit' ><span id='delete-button'>{!! trans('form.delete') !!}<span></button>
                     </form>
                     @endcan
                 @endif
             </span>
-            <a href="{{ url('/logout') }}">{{ trans('auth.to-logout')}}</a>
+            <a href="{{ url('/logout') }}">{!! trans('auth.to-logout') !!}</a>
 @endsection

@@ -8,6 +8,6 @@
 @section('js', '
 ')
 @section('content')
-            <h1>{{ trans('error.404') }}</h1>
-            <a href="{{ url('/logout') }}">{{ trans('auth.to-logout')}}</a>
+            <h1>{!! trans('error.404') !!}</h1>
+            <a href="{{ url('/logout') }}">{!! trans('auth.to-logout') !!}</a>
 @endsection

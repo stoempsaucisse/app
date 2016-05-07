@@ -14,8 +14,8 @@ return [
     */
 
     'failed' => 'Ces données ne correspondent à aucun utilisateur.',
-    'throttle' => 'Trop de tentatives de connection. Vuillez réessayer dans :seconds secondes.',
-    'welcome' => 'Microffice vous souhaite la bien venue. Veuillez-vous identifier.',
+    'throttle' => 'Trop de tentatives de connection.<br/>Veuillez réessayer dans :seconds secondes.',
+    'welcome' => 'Microffice vous souhaite la bien venue.<br/>Veuillez-vous identifier.',
     'to-login' => 'M\'identifier',
     'to-logout' => 'Me déconnecter',
     'login' => 'Identifiant',

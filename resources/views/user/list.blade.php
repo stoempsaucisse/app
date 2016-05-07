@@ -8,13 +8,13 @@
 @section('js', '
 ')
 @section('content')
-            <h1>{{ trans('user.index') }}</h1>
+            <h1>{!! trans('user.index') !!}</h1>
             <ul id='user-list'>
                 @each('user.list-item', $users, 'user')
 
             </ul>
 @can('create', [Microffice\User::class])
-            <a href="{{ action('UserController@create') }}">{{ trans('user.create')}}</a>
+            <a href="{{ action('UserController@create') }}">{!! trans('user.create') !!}</a>
 @endcan
-            <a href="{{ url('/logout') }}">{{ trans('auth.to-logout')}}</a>
+            <a href="{{ url('/logout') }}">{!! trans('auth.to-logout') !!}</a>
 @endsection

@@ -36,41 +36,62 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot($events);
 
-        
-        // $events->listen('user.user:after', function($view){
-        //     return 'user.chatLink';
+        /**
+         *  Register view listeners here
+         *  
+         *  view.name:before        return view.name(s) to render 'before' this view.name
+         *  view.name:after         return view.name(s) to render 'after' this view.name
+         *  view.name:data          return an array of data to bound to this view
+         *                          the keys are used as variable names
+         *  view.name:composite     return an array with before, after and/or data values
+         */
+
+        // $events->listen('user.form:data', function($view){
+        //     return ['userData' => 'avatar.avatar'];
         // });
-        // $events->listen('user.user:after', function($view){
+        // $events->listen('user.form:data', function($view){
+        //     return ['userData2' => 'avatar.avatar'];
+        // });
+
+        // $events->listen('avatar.chatLink:after', function($view){
+        //     return 'avatar.avatar';
+        // });
+
+        // $events->listen('user.fieldset:after', function($view){
         //     // Stub to test without return value
         //     // This mean we may add logic to determine the return value
         //     // Example : check if user has contact => return contact.contact view
         //     $user = $view->offsetGet('user');
         //     if($user->name == 'Dworkin')
         //     {
-        //         return 'user.avatar';
+        //         return 'avatar.avatar';
         //     }
         // });
+
         // Testing with return is array.
-        // $events->listen('user.user:compose', function($view){
-        //     return ['before' => 'user.avatar',
-        //         'after' => ['user.chatLink'],
+        // $events->listen('user.fieldset:composite', function($view){
+        //     return ['before' => 'avatar.avatar',
+        //         'after' => ['avatar.chatLink'],
         //         'test' => ['toto', 'tete']];
         // });
-        // $events->listen('user.form:before', function($view){
-        //     return 'user.avatar-form';
+
+        // $events->listen('user.fieldset:before', function($view){
+        //     return 'avatar.avatar-form';
         // });
-        // $events->listen('user.user:compose', function($view){
-        //     return ['after' => 'user.chatLink',
+
+        // $events->listen('user.fieldset:composite', function($view){
+        //     return ['after' => 'avatar.chatLink',
         //         'test' => ['tata', 'titi']];
         // });
-        // $events->listen('user.user:before', function($view){
+
+        // $events->listen('user.fieldset:before', function($view){
         //     // Stub to test without return value
         //     // This mean we may add logic to determine the return value
         //     // Example : check if user has contact => return contact.contact view
         //     $user = $view->offsetGet('user');
         //     if($user->name == 'Dworkin')
         //     {
-        //         return 'user.avatar';
+        //         return 'avatar.avatar';
         //     }
         // });
     }

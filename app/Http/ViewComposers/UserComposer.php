@@ -2,18 +2,24 @@
 
 namespace Microffice\Http\ViewComposers;
 
+use Microffice\User;
 use Illuminate\View\View;
 
 class UserComposer
 {
     /**
-     * Bind data to the user.avatar view.
+     * Bind data to the user.fieldset view.
      *
      * @param  View  $view
      * @return void
      */
-    public function avatar(View $view)
+    public function fieldset(View $view)
     {
-        $view->with('data', 'avatar');
+        $rules = User::$rules;
+        if($view->getData()['action'] == 'update')
+        {
+            unset($rules['password']);
+        }
+        $view->with('rules', $rules);
     }
 }

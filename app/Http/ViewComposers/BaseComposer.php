@@ -28,7 +28,7 @@ class BaseComposer
     }
 
     /**
-     * Bind :before, :after and :compose event data to any view.
+     * Bind :before, :after and :composite event data to any view.
      *
      * @param  View  $view
      * @return void
@@ -39,20 +39,28 @@ class BaseComposer
         session(['view.parent' => 
             ($this->events->hasListeners($view->getName().':parent')) ? array_filter($this->events->fire($view->getName().':parent'))[0] : false]);
 
-        // Store view tree
+        // Reset view.tree if view.parent is root view
         if(! session('view.parent'))
         {
             session(['view.tree' => '']);
         }
         else
         {
-            if(strpos(session('view.tree'), session('view.parent')) !== false)
+            // Trim all descendant of view.parent from view.tree
+            // This way we "go up" in the tree
+            $viewTree = session('view.tree');
+            $viewParent = session('view.parent');
+            if(strpos($viewTree, $viewParent) !== false)
             {
-                session(['view.tree' => substr(session('view.tree'), 0, strpos(session('view.tree'), session('view.parent')) + strlen(session('view.parent')))]);
+                session(['view.tree' => substr($viewTree, 0, strpos($viewTree, $viewParent) + strlen($viewParent))]);
             }
         }
+        // Load last views tree from session and convert to array
         $tree = array_filter(explode('/', session('view.tree')));
+        // Append current view name
         array_push($tree, $view->getName());
+        // Save new views tree to session and convert to string
+        // Format : view.name/otherview.name/...
         session(['view.tree' => implode('/', $tree)]);
 
         // Unset from previous view.
@@ -68,7 +76,11 @@ class BaseComposer
         {
             $data = array_merge_recursive($data, $after);
         }
-        if(! empty($ret = $this->fireCompose($view)))
+        if(! empty($ret = $this->fireData($view)))
+        {
+            $data = array_merge_recursive($data, $ret);
+        }
+        if(! empty($ret = $this->fireComposite($view)))
         {
             $data = array_merge_recursive($data, $ret);
         }
@@ -98,7 +110,7 @@ class BaseComposer
                     unset($ret['before'][$key]);
                 }
             }
-            $this->registerListeners($ret['before'], $view->getName());
+            $this->registerParentName($ret['before'], $view->getName());
         }
         return $ret;
     }
@@ -123,25 +135,42 @@ class BaseComposer
                     unset($ret['after'][$key]);
                 }
             }
-            $this->registerListeners($ret['after'], $view->getName());
+            $this->registerParentName($ret['after'], $view->getName());
         }
         return $ret;
     }
 
     /**
-     * Fire :compose event on view.
+     * Fire :data event on view.
      *
      * @param  View  $view
      * @return void
      */
-    public function fireCompose(View $view)
+    public function fireData(View $view)
     {
         $ret = [];
-        foreach(array_filter($this->events->fire($view->getName().':compose', [$view])) as $array)
+        foreach(array_filter($this->events->fire($view->getName().':data', [$view])) as $array)
+        {
+            $ret = array_merge_recursive($array, $ret);
+        }
+        return $ret;
+    }
+
+    /**
+     * Fire :composite event on view.
+     *
+     * @param  View  $view
+     * @return void
+     */
+    public function fireComposite(View $view)
+    {
+        $ret = [];
+        foreach(array_filter($this->events->fire($view->getName().':composite', [$view])) as $array)
         {
             foreach ($array as $key => $value)
             {
                 $value = (array) $value;
+                // Handle before and after keys
                 if(($key == 'before') || ($key == 'after'))
                 {
                     // Unset :before and :after views who are ancestors of this view
@@ -152,8 +181,10 @@ class BaseComposer
                             unset($value[$kkey]);
                         }
                     }
-                    $this->registerListeners($value, $view->getName());
+                    $this->registerParentName($value, $view->getName());
                 }
+                // Copy data from other keys to $ret
+                // which populate the $data view variable
                 foreach ($value as $val)
                 {
                     $ret[$key][] = $val;
@@ -164,12 +195,12 @@ class BaseComposer
     }
 
     /**
-     * Register parent: listeners
+     * Register event listeners that return the parent view.name for given views
      *
      * @param  array  $views
      * @return void
      */
-    public function registerListeners($views, $parentName)
+    public function registerParentName($views, $parentName)
     {
         foreach($views as $viewName)
         {

@@ -18,7 +18,7 @@ class UserComposer
         $rules = User::$rules;
         if($view->getData()['action'] == 'update')
         {
-            unset($rules['password']);
+            $rules['password'] = removeValidationRule($rules['password'], 'required');
         }
         $view->with('rules', $rules);
     }

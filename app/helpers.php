@@ -1,8 +1,36 @@
 <?php
 
+if (! function_exists('removeValidationRule')) {
+    /**
+     * Strip validation rules from any unique rule
+     *
+     * @param  array|string     $rules
+     * @return array|string     $rules
+     *
+     */
+    function removeValidationRule($rules, $badRuleName)
+    {
+        //  Make sure $rules is an array
+        $rulesArr = (array) $rules;
+
+        foreach ($rulesArr as $field => $rule)
+        {
+            // Tested regexes for php on http://www.phpliveregex.com/
+            $newRule = preg_replace("/($badRuleName(:[\w,]+)?(\||(?!.)))/i", '', $rulesArr[$field]);
+            // $newRule = preg_replace("/(unique:[\w,]+)(\||(?!.))/i", '', $rulesArr[$field]);
+            // Strip trailing '|' if present
+            $rulesArr[$field] = preg_replace('/\|$/i', '', $newRule);
+        }
+
+        // For convienience to return string if $rules is string
+        return is_string($rules) ? array_pop($rulesArr) : $rulesArr;
+    }
+}
+
 if (! function_exists('getStandaloneValidationRules')) {
     /**
-     * Strip validation rules from any dependencie for given field(s)
+     * Return rules for given fields striped from any
+     * rule that depends on any other field
      *
      * @param  array|string     $rules
      * @param  array|string     $fields
@@ -11,88 +39,88 @@ if (! function_exists('getStandaloneValidationRules')) {
      */
     function getStandaloneValidationRules($rules, $fields = null)
     {
+        // Rules with always depend on anotherfield
+        // confirmed depends on a field under naming convention
+        // therefor it is not present in $rulesWithDep array
+        // and is statically present in regex
+        $rulesWithDep = [
+            'different',
+            'in_array',
+            'required_\w+',
+            'same'
+        ];
+
+        // Rules that sometimes depend on anotherfield
+        $rulesSometimesDep = [
+            'after',
+            'before'
+        ];
+
         //  Make sure $rules is an array
-        $rulesIsString = is_string($rules);
-        $rules = (array) $rules;
+        $rulesArr = (array) $rules;
 
         //  Make sure $fields is an array
-        $fields = is_null($fields) ? array_keys($rules) : $fields;
-        $fields = is_string($fields) ? explode(',', $fields) : (array) $fields;
-
-        foreach ($rules as $field => $rule)
+        $fieldsArr = $fields;
+        switch (true)
         {
-            if (in_array($field, $fields))
-            {
-                // Tested regexes for php on http://www.phpliveregex.com/
-                $newRule = preg_replace('/(confirmed|(different|same|required\w+):[\w,]+)(\||(?!.))/i', '', $rules[$field]);
-                // Strip trailing '|' if present
-                $rules[$field] = preg_replace('/\|$/i', '', $newRule);
-            } else {
-                // Remove rules for fields who are NOT in $fields
-                unset($rules[$field]);
-            }
+            case is_null($fields):
+                $fieldsArr = array_keys($rulesArr);
+                break;
+            case is_string($fields):
+                $fieldsArr = explode(',', $fields);
+                break;
+            case is_array($fields):
+                break;
             
+            default:
+                throw new Exception('$fields should be a string or an array', 1);
+                
+                break;
         }
 
-        // For convienience to return string if $rules is string
-        return $rulesIsString ? array_pop($rules) : $rules;
-    }
-}
-
-if (! function_exists('addExceptionsToUniqueRules')) {
-    /**
-     * Strip validation rules from any dependencies for given field(s)
-     *
-     * @param  array|string     $rules
-     * @return array|string     $exceptions
-     * @return array|string     $rules
-     *
-     */
-    function addExceptionsToUniqueRules($rules, $exceptions)
-    {
-        //  Make sure $rules is an array
-        $rulesIsString = is_string($rules);
-        $rules = (array) $rules;
-
-        //  Make sure $exceptions is an array
-        $exceptions = (array) $exceptions;
-        if(count(array_diff_key($rules, $exceptions)) > 0)
+        // Check if after: and before: depend on a fieldname listed in $fields
+        // If so, add them too $rulesWithDep
+        if(!is_null($fields))
         {
-            if(isset($exceptions[0]))
+            foreach ($rulesSometimesDep as $badRule)
             {
-                // Use exception for all rules
-                $exception = array_pop($exceptions);
-                foreach ($rules as $field => $rule)
+                $counter = 0;
+                foreach ($rulesArr as $rule)
                 {
-                    $exceptions[$field] = $exception;
+                    if(preg_match('/' . $badRule . ':(\w+)/i', $rule, $matches) && in_array($matches[1], $fieldsArr))
+                    {
+                        ++$counter;
+                    }
+                }
+                if($counter)
+                {
+                    array_push($rulesWithDep, $badRule);
                 }
             }
-            else
-            {
-                throw new Exception('$rules and $exception must have same keys', 1);
-            }
         }
 
-        foreach ($rules as $field => $rule)
+        // Create the regex
+        // Tested regexes for php on http://www.phpliveregex.com/
+        $regex = '/(confirmed|(' . implode('|', $rulesWithDep) . '):[\w,]+)(\||(?!.))/i';
+
+        // Modify given rules
+        foreach ($rulesArr as $field => $rule)
         {
-            // Tested regexes for php on http://www.phpliveregex.com/
-            // Check for leading ','. Add one if needed.
-            $exception = preg_replace('/^\w+/i', ',$0', $exceptions[$field]);
-            // Extract unique rule as is
-            preg_match('/unique:\w+(,\w+){0,3}/i', $rule, $arr);
-            $original = array_shift($arr);
-            // Strip id and id_column if present
-            $unique = preg_replace('/(unique:\w+(,\w+)?)(,\w+){0,2}/i', '$1', $original);
-            // Check if column is present or add $field as column
-            $unique = preg_replace('/(unique:\w+)(?!,\w+)$/i', '$1,' . $field, $unique);
-            if(preg_match('/\d+$/i', $unique)) throw new Exception('Supplied $rules and $fields are strings. Cannot deduct column name without array keys.', 1);
+            if (in_array($field, $fieldsArr))
+            {
+                // Test against regex
+                $newRule = preg_replace($regex, '', $rulesArr[$field]);
+                // Strip trailing '|' if present
+                $rulesArr[$field] = preg_replace('/\|$/i', '', $newRule);
+            } else {
+                // Remove rules for fields who are NOT in $fields
+                unset($rulesArr[$field]);
+            }
             
-            // Add $exception at end of unique rule
-            $rules[$field] = str_replace($original, $unique . $exception, $rule);
         }
 
-        // For convienience to return string if $rules is string
-        return $rulesIsString ? array_pop($rules) : $rules;
+        // For convienience return string if given $rules is string
+        return is_string($rules) ? array_pop($rulesArr) : $rulesArr;
     }
 }
 
@@ -106,19 +134,6 @@ if (! function_exists('removeUniqueRules')) {
      */
     function removeUniqueRules($rules)
     {
-        //  Make sure $rules is an array
-        $rulesIsString = is_string($rules);
-        $rules = (array) $rules;
-
-        foreach ($rules as $field => $rule)
-        {
-            // Tested regexes for php on http://www.phpliveregex.com/
-            $newRule = preg_replace('/(unique:[\w,]+)(\||(?!.))/i', '', $rules[$field]);
-            // Strip trailing '|' if present
-            $rules[$field] = preg_replace('/\|$/i', '', $newRule);
-        }
-
-        // For convienience to return string if $rules is string
-        return $rulesIsString ? array_pop($rules) : $rules;
+        return removeValidationRule($rules, 'unique');
     }
 }

@@ -4,6 +4,72 @@ use Microffice\User;
 
 class HelpersTest extends TestCase
 {
+
+    /**
+     * Test removeValidationRule.
+     *
+     * @return void
+     */
+    public function testRemoveValidationRule()
+    {
+        $badRules = [
+            'confirmed',
+            'different:anotherfield',
+            'required_if:anotherfield,value',
+            'required_unless:anotherfield,value,value2',
+            'required_with_all:anotherfield,value,value2,value3'
+        ];
+
+        foreach ($badRules as $badRule)
+        {
+            $rule = "alpha|beta:field,value|$badRule";
+            $ret = removeValidationRule($rule, $badRule);
+
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('alpha|', $ret);
+            $this->assertContains('|beta:field,value', $ret);
+            $this->assertNotContains('beta:field,value|', $ret);
+            $this->assertNotContains($badRule, $ret);
+
+            $rule = "alpha|$badRule|omega:field,value,value2";
+            $ret = removeValidationRule($rule, $badRule);
+
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('alpha|', $ret);
+            $this->assertContains('|omega:field,value,value2', $ret);
+            $this->assertNotContains($badRule, $ret);
+
+            $rule = "$badRule|gamma:field,value|omega";
+            $ret = removeValidationRule($rule, $badRule);
+
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('gamma:field,value|', $ret);
+            $this->assertContains('|omega', $ret);
+            $this->assertNotContains('|gamma:field,value', $ret);
+            $this->assertNotContains($badRule, $ret);
+        }
+
+        // Test with array of rules as input
+        $badRule = 'unique:table,column';
+        $rules = [
+            'name' => "alpha:field|beta|$badRule",
+            'lastname' => "alpha|$badRule|omega",
+            'email' => "$badRule|alpha|omega"
+            ];
+        $ret = removeUniqueRules($rules);
+
+        $this->assertTrue(is_array($ret));
+        $this->assertContains('alpha:field|beta', $ret['name']);
+        $this->assertNotContains('alpha:field|beta|', $ret['name']);
+        $this->assertNotContains($badRule, $ret['name']);
+        $this->assertContains('alpha|omega', $ret['lastname']);
+        $this->assertNotContains($badRule, $ret['lastname']);
+        $this->assertContains('alpha|omega', $ret['email']);
+        $this->assertNotContains('|alpha|omega', $ret['email']);
+        $this->assertNotContains($badRule, $ret['email']);
+
+    }
+
     /**
      * Test getStandaloneValidationRules.
      *
@@ -11,133 +77,211 @@ class HelpersTest extends TestCase
      */
     public function testGetStandaloneValidationRules()
     {
-        // Test with only (string) $rules
-        $different = 'different:name';
-        $same = 'same:lastname';
-        $required = 'required_if_not:password,50';
-        $rules = 'alpha|confirmed|' . $different . '|beta|' . $same . '|' . $required . '|gamma';
+        // As of today, these are the rules that depend on other fields :
+        // 
+        // * after: (could use another field)
+        // * before: (not sure, but no reason it does not work as after:)
+        // * confirmed
+        // * different:
+        // * in_array:
+        // * required_*:
+        // * same:
+        $badRules = [
+            'confirmed',
+            'different:anotherfield',
+            'in_array:anotherfield',
+            'required_if:anotherfield,value',
+            'required_if:anotherfield,value,value2',
+            'required_unless:anotherfield,value3',
+            'required_with:field',
+            'required_with:field2,field3',
+            'required_with_all:field',
+            'required_with_all:field2,field3',
+            'required_without:field',
+            'required_without:field2,field3',
+            'required_without_all:field',
+            'required_without_all:field2,field3',
+            'same:anotherfield',
+        ];
+
+        // Test regex is OK :)
+        foreach ($badRules as $badRule)
+        {
+            // Test with (string) $rules and without $fields
+            // 1) Test when rules definition starts with a rule to strip
+            $rules = $badRule . '|alpha|omega';
+            $ret = getStandaloneValidationRules($rules);
+
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('alpha|', $ret);
+            $this->assertContains('|omega', $ret);
+            $this->assertNotContains($badRule, $ret);
+
+            // 2) Test when rules definition ends with a rule to strip
+            $rules = 'alpha|omega|' . $badRule;
+            $ret = getStandaloneValidationRules($rules);
+
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('alpha|', $ret);
+            $this->assertContains('|omega', $ret);
+            $this->assertNotContains($badRule, $ret);
+
+            // 3) Test when rules definition contains a rule to strip
+            $rules = 'alpha|' . $badRule . '|omega';
+            $ret = getStandaloneValidationRules($rules);
+
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('alpha|', $ret);
+            $this->assertContains('|omega', $ret);
+            $this->assertNotContains($badRule, $ret);
+
+            // 4) Test when rules definition contains two adjecent rules to strip
+            $otherBadRule = $badRules[rand(0, count($badRules) - 1)];
+            $rules = 'alpha|' . $badRule . '|' . $otherBadRule . '|omega';
+            $ret = getStandaloneValidationRules($rules);
+
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('alpha|', $ret);
+            $this->assertContains('|omega', $ret);
+            $this->assertNotContains($badRule, $ret);
+            $this->assertNotContains($otherBadRule, $ret);
+        }
+
+        // 5) Test that required is not striped
+        $rules = 'alpha|required|omega';
+        $ret = getStandaloneValidationRules($rules);
+
+        $this->assertTrue(is_string($ret));
+        $this->assertContains($rules, $ret);
+
+        // 6) Test that after: and before: are not striped when $fields is not supplied
+        $badRule = 'after:anotherfield|beta|before:anotherfield|gamma';
+        $rules = 'alpha|' . $badRule . '|omega';
         $ret = getStandaloneValidationRules($rules);
 
         $this->assertTrue(is_string($ret));
         $this->assertContains('alpha|', $ret);
-        $this->assertContains('|beta|', $ret);
-        $this->assertContains('|gamma', $ret);
-        $this->assertNotContains('confirmed', $ret);
-        $this->assertNotContains($different, $ret);
-        $this->assertNotContains($same, $ret);
-        $this->assertNotContains($required, $ret);
+        $this->assertContains('|omega', $ret);
+        $this->assertContains($badRule, $ret);
 
-        // Test with only (array) $rules
+        // 7) Test that after: and before: are striped when $fields is supplied
+        $badRule = 'after:anotherfield|beta|before:tomorrow|gamma';
+        $rules = 'alpha|' . $badRule . '|omega';
+        $ret = getStandaloneValidationRules($rules, 'anotherfield,somefield');
+
+        $this->assertTrue(is_string($ret));
+        $this->assertContains('alpha|', $ret);
+        $this->assertContains('|omega', $ret);
+        $this->assertContains('before', $ret);
+        $this->assertNotContains($badRule, $ret);
+
+
+        // Tests with only (array) $rules
+        $badRule = $badRules[rand(0, count($badRules) - 1)];
+        $otherBadRule = $badRules[rand(0, count($badRules) - 1)];
         $rules = array(
-            'name' => 'alpha|' . $required . '|max:255|unique:users|confirmed',
-            'email' => 'digit|' . $same . '|' . $different . '|unique:users');
+            'name' => 'alpha|' . $badRule . '|omega',
+            'email' => 'gamma|' . $otherBadRule);
         $ret = getStandaloneValidationRules($rules);
 
         $this->assertTrue(is_array($ret));
         $this->assertContains('alpha|', $ret['name']);
-        $this->assertContains('|max:255|unique:users', $ret['name']);
-        $this->assertNotContains('confirmed', $ret['name']);
-        $this->assertNotContains($required, $ret['name']);
-        $this->assertContains('digit|', $ret['email']);
-        $this->assertContains('|unique:users', $ret['email']);
-        $this->assertNotContains($different, $ret['email']);
-        $this->assertNotContains($same, $ret['email']);
-
-        // Test both $rules and $fields are strings
-        $rules = 'required|digit|' . $same . '|' . $different . '|unique:users';
-        $fields = 'password';
-        $ret = getStandaloneValidationRules($rules, $fields);
-
-        $this->assertTrue(is_string($ret));
-        $this->assertContains('required|digit|', $ret);
-        $this->assertContains('|unique:users', $ret);
-        $this->assertNotContains($same, $ret);
-        $this->assertNotContains($different, $ret);
+        $this->assertContains('|omega', $ret['name']);
+        $this->assertNotContains($badRule, $ret['name']);
+        $this->assertContains('gamma', $ret['email']);
+        $this->assertNotContains($otherBadRule, $ret['email']);
 
         // Test (array) $rules and (string) $fields
+        $badRule = $badRules[rand(0, count($badRules) - 1)];
+        $otherBadRule = $badRules[rand(0, count($badRules) - 1)];
         $rules = array(
-            'name' => 'alpha|' . $required . '|max:255|unique:users|confirmed',
-            'email' => 'digit|' . $same . '|' . $different . '|unique:users',
-            'password' => 'required|confirmed|min:6',
-        );
-        $fields = 'password,name';
+            'name' => 'alpha|' . $badRule . '|omega',
+            'email' => 'gamma|' . $otherBadRule);
+        $fields = 'email,name';
         $ret = getStandaloneValidationRules($rules, $fields);
 
         $this->assertTrue(is_array($ret));
         $this->assertContains('alpha|', $ret['name']);
-        $this->assertContains('|max:255|unique:users', $ret['name']);
-        $this->assertNotContains('confirmed', $ret['name']);
-        $this->assertNotContains($required, $ret['name']);
-        $this->assertContains('required|', $ret['password']);
-        $this->assertContains('|min:6', $ret['password']);
-        $this->assertNotContains('confirmed', $ret['password']);
+        $this->assertContains('|omega', $ret['name']);
+        $this->assertNotContains($badRule, $ret['name']);
+        $this->assertContains('gamma', $ret['email']);
+        $this->assertNotContains($otherBadRule, $ret['email']);
 
         // Test $rules and $fields are arrays
+        $badRule = $badRules[rand(0, count($badRules) - 1)];
+        $otherBadRule = $badRules[rand(0, count($badRules) - 1)];
         $rules = array(
-            'name' => 'alpha|' . $required . '|max:255|unique:users|confirmed',
-            'email' => 'digit|' . $same . '|' . $different . '|unique:users',
-            'password' => 'required|confirmed|min:6',
-        );
-        $fields = array('password', 'name');
+            'name' => 'alpha|' . $badRule . '|omega',
+            'email' => 'gamma|' . $otherBadRule);
+        $fields = ['email', 'name'];
         $ret = getStandaloneValidationRules($rules, $fields);
 
         $this->assertTrue(is_array($ret));
         $this->assertContains('alpha|', $ret['name']);
-        $this->assertContains('|max:255|unique:users', $ret['name']);
-        $this->assertNotContains('confirmed', $ret['name']);
-        $this->assertNotContains($required, $ret['name']);
-        $this->assertContains('required|', $ret['password']);
-        $this->assertContains('|min:6', $ret['password']);
-        $this->assertNotContains('confirmed', $ret['password']);
+        $this->assertContains('|omega', $ret['name']);
+        $this->assertNotContains($badRule, $ret['name']);
+        $this->assertContains('gamma', $ret['email']);
+        $this->assertNotContains($otherBadRule, $ret['email']);
     }
+
     /**
-     * Test addExceptionsToUniqueRules.
+     * Test removeUniqueRules.
      *
      * @return void
      */
-    public function testAddExceptionsToUniqueRules()
+    public function testRemoveUniqueRules()
     {
-        $rules = 'alpha|unique:users,name|gamma';
-        $exceptions = '50,user_id';
-        $ret = addExceptionsToUniqueRules($rules, $exceptions);
+        $params = ['table', 'column'];
+        $optionalParams = ['id', 'idColumn', ''];
+        // Test for all 3 forms of unique: rule
+        foreach ($optionalParams as $optionalParm)
+        {
+            // Test all positions of unique: in rule string
+            $badRule = 'unique:' . implode(',', $params);
+            $rules = "alpha|beta|$badRule";
+            $ret = removeUniqueRules($rules);
 
-        $rules = User::$rules;
-        $exceptions = '50,user_id';
-        $ret = addExceptionsToUniqueRules($rules, $exceptions);
-        dd($ret);
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('alpha|beta', $ret);
+            $this->assertNotContains('alpha|beta|', $ret);
+            $this->assertNotContains($badRule, $ret);
 
-        $rules = array('email' => 'alpha|unique:users,name|gamma');
-        $exceptions = array('password' => '50,user_id');
-        $raised = 0;
-        try
-        {
-            addExceptionsToUniqueRules($rules, $exceptions);
-        }
-        catch(Exception $expected)
-        {
-            $raised = 1;
-        }
-        if(!$raised)
-        {
-            $this->fail('Exception was not raised');
-        }
+            $rules = "alpha|$badRule|omega";
+            $ret = removeUniqueRules($rules);
 
-        // Test should raise Exception when no column is provided
-        $rules = 'alpha|unique:users|gamma';
-        $exceptions = '50,user_id';
-        $raised = 0;
-        try
-        {
-            addExceptionsToUniqueRules($rules, $exceptions);
-        }
-        catch(Exception $expected)
-        {
-            $raised = 1;
-        }
-        if(!$raised)
-        {
-            $this->fail('Exception was not raised');
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('alpha|', $ret);
+            $this->assertContains('|omega', $ret);
+            $this->assertNotContains($badRule, $ret);
+
+            $rules = "$badRule|beta|omega";
+            $ret = removeUniqueRules($rules);
+
+            $this->assertTrue(is_string($ret));
+            $this->assertContains('beta|omega', $ret);
+            $this->assertNotContains('|beta|omega', $ret);
+            $this->assertNotContains($badRule, $ret);
+
+            array_push($params, $optionalParm);
         }
 
+        // Test with array of rules as input
+        $badRule = 'unique:' . implode(',', $params);
+        $rules = [
+            'name' => "alpha|beta|$badRule",
+            'lastname' => "alpha|$badRule|omega",
+            'email' => "$badRule|alpha|omega"
+            ];
+        $ret = removeUniqueRules($rules);
+
+        $this->assertTrue(is_array($ret));
+        $this->assertContains('alpha|beta', $ret['name']);
+        $this->assertNotContains('alpha|beta|', $ret['name']);
+        $this->assertNotContains($badRule, $ret['name']);
+        $this->assertContains('alpha|omega', $ret['lastname']);
+        $this->assertNotContains($badRule, $ret['lastname']);
+        $this->assertContains('alpha|omega', $ret['email']);
+        $this->assertNotContains('|alpha|omega', $ret['email']);
+        $this->assertNotContains($badRule, $ret['email']);
     }
 }

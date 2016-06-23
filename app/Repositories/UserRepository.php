@@ -56,8 +56,7 @@ class UserRepository
     // THIS IS A STUB and should provide a real array of ids.
     public function allowedIds()
     {
-        return ['56c5e90e13e75775128b456e', '56c5e90e13e75775128b456d'];
-        /*/return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];/**/
+        return User::all()->modelKeys();
     }
     
     /**

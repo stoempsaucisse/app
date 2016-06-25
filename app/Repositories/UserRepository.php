@@ -24,13 +24,11 @@ class UserRepository
     /**
      * Create a new base composer.
      *
-     * @param  Dispatcher $events
      * @return void
      */
-    public function __construct(Dispatcher $events)
+    public function __construct()
     {
         // Dependencies automatically resolved by service container...
-        $this->events = $events;
     }
 
     /**
@@ -103,8 +101,6 @@ class UserRepository
         // Validate $data
         $this->validate($data);
         $user = User::create(['name' => $data['name'], 'email' => $data['email'], 'password' => bcrypt($data['password'])]);
-        // Fire create event
-        $this->events->fire('user:create', [$user]);
         return $user;
     }
 
@@ -123,8 +119,6 @@ class UserRepository
         }
         // Retrieve user to update
         $user = User::findOrFail($userId);
-        // Fire update event for this user
-        $this->events->fire('user:update', [$user]);
 
         // Gather update rules
         $rules = $user->updateRules();

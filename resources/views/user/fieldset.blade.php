@@ -11,7 +11,7 @@
 @if ( !isset($user) || auth()->user()->can('updatePassword', [Microffice\User::class, $user->id]))
 
                         <input  name="user[password]" class="" type="password" placeholder="{!! trans('auth.password') !!}" value="" {{ (isset($rules['password']) && strpos( $rules['password'], 'required') !== false) ? 'required ' : '' }}/>
-                        <input  name="user[password_confirmation]" class="" type="password" placeholder="{!! trans('auth.confirm_password') !!}" value="" {{ (isset($rules['password']) && strpos( $rules['password'], 'required') !== false) ? 'required ' : '' }}/>
+                        <input  name="user[password_confirmation]" class="" type="password" placeholder="{!! trans('auth.password_confirmation') !!}" value="" {{ (isset($rules['password']) && strpos( $rules['password'], 'required') !== false) ? 'required ' : '' }}/>
 @endif
 @if( isset($after) )
 @foreach($after as $templateName)

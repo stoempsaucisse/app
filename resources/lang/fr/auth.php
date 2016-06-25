@@ -20,7 +20,7 @@ return [
     'to-logout' => 'Me déconnecter',
     'login' => 'Identifiant',
     'password' => 'Mot de passe',
-    'confirm_password' => 'Confirmation mot de passe',
+    'password_confirmation' => 'Confirmation mot de passe',
     'remember' => 'Se rappeler de moi',
     'forgotten' => 'Mot de passe oublié?',
     'email-password' => 'Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe',

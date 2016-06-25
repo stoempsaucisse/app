@@ -14,7 +14,7 @@
                 <input type="hidden" name="token" value="{{ $token }}">
                 <input class="stacked first" type="email" name="email" value="{{ $email or old('email') }}" placeholder="Email">
                 <input class="stacked" type="password" name="password" placeholder="{!! trans('auth.password') !!}">
-                <input class="stacked" type="password" name="password_confirmation" placeholder="{!! trans('auth.confirm_password') !!}">
+                <input class="stacked" type="password" name="password_confirmation" placeholder="{!! trans('auth.password_confirmation') !!}">
                 <div class="form-footer">
                     <button id="login" type="submit">{!! trans('form.reset') !!}</button>
                 </div>

@@ -69,7 +69,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show form to edit user.
+     * Show form to update user.
      *
      * @return Response
      */

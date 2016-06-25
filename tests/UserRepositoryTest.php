@@ -25,9 +25,9 @@ class UserRepositoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->setDB('sqlite_memory');
+        // $this->setDB('sqlite_memory');
 
-        $this->users = new UserRepository(app(Dispatcher::class));
+        $this->users = new UserRepository();
     }
 
     /**
@@ -60,13 +60,15 @@ class UserRepositoryTest extends TestCase
      *
      * @return void
      */
-    public function testFindAllShouldCallAllowedIdsMethodForNonAdmin()
+    public function testFindAllShouldCallAllowedIdsMethodForFindAllDeniedUsers()
     {
         // Authenticating User but not Dworkin
         $user = factory(Microffice\User::class)->make([
             'name' => 'Abigail',
         ]);
         $this->actingAs($user);
+        // Denying
+        $this->deny('once');
 
         // Partial mock for allowedIds()
         $mock = Mockery::mock('Microffice\Repositories\UserRepository[allowedIds]', array(app(Dispatcher::class)));
@@ -288,13 +290,7 @@ class UserRepositoryTest extends TestCase
 
         $mock = Mockery::mock('Microffice\Repositories\UserRepository[validate]', array(app(Dispatcher::class)));
         $data = factory(Microffice\User::class)->make()->toArray();
-        $mock->shouldReceive('validate')->withArgs([
-            $data,
-            [
-                "name" => "required|max:255|unique:users",
-                "email" => "required|email|max:255|unique:users"
-            ]
-        ])->once()->andReturn(true);
+        $mock->shouldReceive('validate')->once()->andReturn(true);
 
         $mock->update($user->id, $data);
     }

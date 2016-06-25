@@ -51,6 +51,6 @@ Route::group(['middleware' => 'web'], function () {
         Route::get('/', 'HomeController@welcome');
         Route::get('/home', 'HomeController@index');
         // User routes
-        Route::resource('user', 'UserController', ['except' => ['edit']]);
+        Route::resource('user', 'UserController');
     });
 });

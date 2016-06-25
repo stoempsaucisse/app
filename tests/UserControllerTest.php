@@ -94,7 +94,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * Test GET /user/{id} returns user form with user data.
+     * Test GET /user/{id} returns user data.
      *
      * @return void
      */
@@ -105,10 +105,8 @@ class UserControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->visit('/user/' . $user->id)
-             ->see(trans('user.update'))
-             ->see(trans('form.save'))
-             ->see(trans('form.reset'))
-             ->see(trans('form.delete'))
+             ->see(trans('user.name'))
+             ->see(trans('form.email'))
              ->see($user->name)
              ->see($user->email)
              ->dontSee($user->password);
@@ -126,7 +124,7 @@ class UserControllerTest extends TestCase
         $this->actingAs($user);
         $newName = rand(10000, 999999);
 
-        $this->visit('/user/' . $user->id)
+        $this->visit('/user/' . $user->id . '/edit')
              ->type($newName, 'user[name]')
              ->press(trans('form.save'))
              ->seePageIs('/user');
@@ -147,11 +145,11 @@ class UserControllerTest extends TestCase
         $this->actingAs($user);
         $newPassword = 'baba';
 
-        $this->visit('/user/' . $user->id)
+        $this->visit('/user/' . $user->id . '/edit')
              ->type($newPassword, 'user[password]')
              ->type($newPassword, 'user[password_confirmation]')
              ->press(trans('form.save'))
-             ->seePageIs('/user/' . $user->id)
+             ->seePageIs('/user/' . $user->id . '/edit')
              ->see($user->name)
              ->see($user->email)
              ->see(str_replace(':min', 6, str_replace(':attribute', trans('validation.attributes.password'), trans('validation.min.string'))))
@@ -165,11 +163,11 @@ class UserControllerTest extends TestCase
      */
     public function testDeleteUserIdReturnsToUserIndex()
     {
-        // Authenticating User but not Dworkin
+        // Authenticating as Dworkin
+        $this->actingAs(User::where('name', 'Dworkin')->first());
         $user = User::where('name', '!=', 'Dworkin')->first();
-        $this->actingAs($user);
 
-        $this->visit('/user/' . $user->id)
+        $this->visit('/user/' . $user->id . '/edit')
              ->press(trans('form.delete'))
              ->seePageIs('/user');
         

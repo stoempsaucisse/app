@@ -14,7 +14,8 @@ return [
     'user' => 'utilisateur|utilisateurs',
     'index' => 'Liste des utilisateurs',
     'create' => 'Créer un nouvel utilisateur',
-    'update' => 'Modifier les données de :',
+    'show' => 'Consulter les données de :',
+    'edit' => 'Modifier les données de :',
     'name' => 'Nom d\'utilisateur',
     'fieldset-legend' => 'Utilisateur'
 

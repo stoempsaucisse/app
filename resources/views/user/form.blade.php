@@ -10,7 +10,7 @@
 @section('content')
             <h1>{{ trans('user.' . $action) }}</h1>
             <form  id='{{ $action }}-user' class="" method="POST" action="{{ ($action == 'create') ? action('UserController@store')  : action('UserController@update', ['user' => $user->id])}}">
-                @if( $action == 'update' ) {{ method_field('PUT') }} @endif
+                @if( $action == 'edit' ) {{ method_field('PUT') }} @endif
                 {{ csrf_field() }}
                 @include('user.fieldset')
 
@@ -18,7 +18,7 @@
             <span class='form-buttons'>
                 <button type='submit' form='{{ $action }}-user' >{!! trans('form.save') !!}</button>
                 <button type='reset' form='{{ $action }}-user' >{!! trans('form.reset') !!}</button>
-                @if( $action == 'update' )
+                @if( $action == 'edit' )
                     @can('delete', [Microffice\User::class, $user->id])
                     <form id='delete-user' class="" method="POST" action="{{ action('UserController@destroy', ['id' => $user->id]) }}">
                         {{ method_field('DELETE') }}

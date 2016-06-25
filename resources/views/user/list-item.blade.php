@@ -1,9 +1,5 @@
                 <li class='user-list'>
-@can('update', [Microffice\User::class, $user->id])
-                    <a class="user-list" href='{{ url("user/$user->id") }}'>
-@else
-                    <a class="user-list disabled" href='#' title="{{ trans('error.edit', ['resource' => trans_choice('user.user', 1)]) }}">
-@endcan
+                    <a class="user-list" href='{{ url("user/$user->id/edit") }}'>
 @if( isset($before) )
 @foreach($before as $templateName)
                         @include($templateName)

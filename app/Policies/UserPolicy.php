@@ -40,7 +40,7 @@ class UserPolicy
     public function findAll(User $user)
     {
         //  This is a stub, waiting for a real role + perms implementation
-        return $user->name == 'Dworkin';
+        return true;
     }
 
     /**
@@ -51,7 +51,7 @@ class UserPolicy
     public function create(User $user)
     {
         //  This is a stub, waiting for a real role + perms implementation
-        return $user->name == 'Dworkin';
+        return true;
     }
 
     /**
@@ -63,7 +63,7 @@ class UserPolicy
     public function update(User $user, $policyClass, $userId)
     {
         //  This is a stub, waiting for a real role + perms implementation
-        return $user->id == $userId || $user->name == 'Dworkin';
+        return true;
     }
 
     /**
@@ -75,7 +75,7 @@ class UserPolicy
     public function updateName(User $user, $policyClass, $userId)
     {
         //  This is a stub, waiting for a real role + perms implementation
-        return $user->id == $userId;
+        return true;
     }
 
     /**
@@ -87,7 +87,7 @@ class UserPolicy
     public function updatePassword(User $user, $policyClass, $userId)
     {
         //  This is a stub, waiting for a real role + perms implementation
-        return $user->id == $userId;
+        return true;
     }
 
     /**
@@ -102,6 +102,6 @@ class UserPolicy
         {
             return false;
         }
-        return $user->name == 'Dworkin';
+        return true;
     }
 }

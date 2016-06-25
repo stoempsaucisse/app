@@ -69,18 +69,30 @@ class UserController extends Controller
     }
 
     /**
-     * Show form to update user.
+     * Show user.
      *
      * @return Response
      */
     public function show($userId)
     {
         $user = $this->users->findById($userId);
+        return view('user.show', ['action' => 'show', 'user' => $user]);
+    }
+
+    /**
+     * Show edit form to update user.
+     *
+     * @return Response
+     */
+    public function edit($userId)
+    {
+        $user = $this->users->findById($userId);
         if(Gate::denies('update', [User::class, $userId]))
         {
-            throw new AuthorizationException(trans('error.update', ['resource' => trans_choice('user.user', 1)]), 403);
+            return redirect()->action('UserController@show', ['id' => $userId]);
+            // throw new AuthorizationException(trans('error.update', ['resource' => trans_choice('user.user', 1)]), 403);
         }
-        return view('user.form', ['action' => 'update', 'user' => $user]);
+        return view('user.form', ['action' => 'edit', 'user' => $user]);
     }
 
     /**

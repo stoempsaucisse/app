@@ -18,15 +18,13 @@ trait UpdateRules
     {
         $id = ($id === null) ? $this->id : $id;
         $rules = self::$rules;
-        foreach($rules as $field => $rule)
-        {
-            // Extract unique rule as is
+        foreach ($rules as $field => $rule) {
+        // Extract unique rule as is
             preg_match('/unique:\w+(,\w+){0,3}/i', $rule, $arr);
-            if(! empty($arr))
-            {
+            if (! empty($arr)) {
                 $original = array_shift($arr);
                 // Check if column is present or add $field as column
-                $unique = preg_replace('/^(unique:\w+)(?!,\w+)$/i', '$1,' . $field , $original);
+                $unique = preg_replace('/^(unique:\w+)(?!,\w+)$/i', '$1,' . $field, $original);
                 // Add id and idColumn to rules
                 $unique = preg_replace('/^unique:\w+,\w+$/i', '$0,' . $id . ',' . $this->getKeyName(), $unique);
                 $rules[$field] = str_replace($original, $unique, $rule);

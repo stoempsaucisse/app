@@ -2,6 +2,9 @@
 
 namespace Microffice\Repositories;
 
+use Microffice\AccessControl\Contracts\AccessControl as AccessControlContract;
+use Microffice\Core\Repositories\AbstractBaseEloquentRepository;
+
 use Microffice\User;
 
 use Auth;
@@ -12,60 +15,62 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Routing\UrlGenerator;
 
-class UserRepository
+class UserRepository extends AbstractBaseEloquentRepository
 {
     /**
-     * The events dispatcher.
-     *
-     * @var Dispatcher
-     */
-    protected $events;
-
-    /**
-     * Create a new base composer.
+     * Create a new ace composer.
      *
      * @return void
      */
     public function __construct()
     {
-        // Dependencies automatically resolved by service container...
+        parent::__construct(User::class);
     }
 
     /**
-     * Get all Users.
+     * Mutate validation rules before updating if needed.
+     *
+     * @param  array $data
+     * @param  array $rules
+     * @return array $rules
+     */
+    public function mutateRulesBeforeUpdate($data, $rules)
+    {
+        if (! isset($data['password'])) {
+            unset($rules['password']);
+        }
+        return $rules;
+    }
+
+    /**
+     * Mutate data before updating if needed.
+     *
+     * @param  array validated $data
+     * @return array $data
+     */
+    public function mutateDataBeforeUpdate($data)
+    {
+        return $data;
+    }
+
+    /**
+     * Get all Resources.
      *
      * @return Collection
      */
     public function findAll()
     {
-        if(Gate::denies('findAll', User::class))
-        {
-            return User::find($this->allowedIds())->sortBy('name');
+        $resourceClassName = $this->resourceClassName;
+        if (Gate::denies('view', [$resourceClassName])) {
+            throw new AuthorizationException(trans('error.view-list', ['resources' => trans_choice(lcfirst($this->resourceName) . '.' . lcfirst($this->resourceName), 2)]), 403);
         }
-        return User::all()->sortBy('name');
-    }
 
-    /**
-     * Get list of id allowed for current authenticated user.
-     *
-     * @return Collection
-     */
-
-    // THIS IS A STUB and should provide a real array of ids.
-    public function allowedIds()
-    {
-        return User::all()->modelKeys();
-    }
-    
-    /**
-     * Get one User.
-     *
-     * @param  integer $userId
-     * @return User | Exception
-     */
-    public function findById($userId)
-    {
-        return User::findOrFail($userId);
+        $resource = app(AccessControlContract::class);
+        if ($resource->decidesForAll('view', $resourceClassName)) {
+            return $resourceClassName::withTrashed()->get();
+        } else {
+            return $resourceClassName::find($resource->getAllowedIds('view', $resourceClassName));
+        }
     }
 
     /**
@@ -78,85 +83,13 @@ class UserRepository
     public function validate($data, $rules = null)
     {
         $validator = Validator::make(array_dot($data), is_null($rules) ? User::$rules : $rules);
-        if($validator->fails()) throw new ValidationException(
-                $validator, 
+        if ($validator->fails()) {
+            throw new ValidationException(
+                $validator,
                 back()->withInput(request()->except('user.password'))
                       ->withErrors($validator->errors()->getMessages(), 'default')
-        );
+            );
+        }
         return true;
-    }
-
-    /**
-     * Create and save a new user to database.
-     *
-     * @param  array $data
-     * @return User instance
-     */
-    public function saveNew($data)
-    {
-        if(Gate::denies('create', User::class))
-        {
-            throw new AuthorizationException(trans('error.create', ['resource' => trans_choice('user.user', 1)]), 403);
-        }
-        // Validate $data
-        $this->validate($data);
-        $user = User::create(['name' => $data['name'], 'email' => $data['email'], 'password' => bcrypt($data['password'])]);
-        return $user;
-    }
-
-    /**
-     * Update existing user.
-     *
-     * @param  integer $userId
-     * @param  array validated $data
-     * @return bool
-     */
-    public function update($userId, $data)
-    {
-        if(Gate::denies('update', [User::class, $userId]))
-        {
-            throw new AuthorizationException(trans('error.update', ['resource' => trans_choice('user.user', 1)]), 403);
-        }
-        // Retrieve user to update
-        $user = User::findOrFail($userId);
-
-        // Gather update rules
-        $rules = $user->updateRules();
-        // Remove password rules if password is not updated
-        if(! isset($data['password']))
-        {
-            unset($rules['password']);
-        }
-        // Validate data
-        $this->validate($data, $rules);
-        // Remove data that has not changed
-        foreach ($data as $key => $value)
-        {
-            if($user->$key == $data[$key])
-            {
-                unset($data[$key]);
-            }
-        }
-        // Encrypt password
-        if(isset($data['password']))
-        {
-            $data['password'] = bcrypt($data['password']);
-        }
-        return $user->update($data);
-    }
-
-    /**
-     * Delete user from database.
-     *
-     * @param  integer $userId
-     * @return bool
-     */
-    public function delete($userId)
-    {
-        if(Gate::denies('delete', [User::class, $userId]))
-        {
-            throw new AuthorizationException(trans('error.delete', ['resource' => trans_choice('user.user', 1)]), 403);
-        }
-        return User::destroy($userId);
     }
 }

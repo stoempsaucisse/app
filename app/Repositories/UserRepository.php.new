@@ -1,0 +1,46 @@
+<?php
+
+namespace Microffice\Repositories;
+
+use Microffice\AccessControl\Contracts\AccessControl as AccessControlContract;
+use Microffice\Core\Repositories\AbstractBaseEloquentRepository;
+
+class UserRepository
+{
+    /**
+     * Create a new ace composer.
+     *
+     * @return void
+     */
+    public function __construct($className = null, $resourceName = null)
+    {
+        parent::__construct($className, $resourceName);
+    }
+
+    /**
+     * Mutate validation rules before updating if needed.
+     *
+     * @param  array $data
+     * @param  array $rules
+     * @return array $rules
+     */
+    public function mutateRulesBeforeUpdate($data, $rules)
+    {
+        if(! isset($data['password']))
+        {
+            unset($rules['password']);
+        }
+        return $rules;
+    }
+
+    /**
+     * Mutate data before updating if needed.
+     *
+     * @param  array validated $data
+     * @return array $data
+     */
+    public function mutateDataBeforeUpdate($data)
+    {
+        return $data;
+    }
+}

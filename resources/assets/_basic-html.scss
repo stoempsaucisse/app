@@ -16,6 +16,9 @@ a.disabled {
   cursor: default;
   background-color: $bg-color;
 }
+a.trashed {
+  background-color: $warning-bg-color;
+}
 ul {
     list-style: none;
     padding: 0px;

@@ -36,22 +36,18 @@ class BaseComposer
     public function compose(View $view)
     {
         // Store parent view name
-        session(['view.parent' => 
+        session(['view.parent' =>
             ($this->events->hasListeners($view->getName().':parent')) ? array_filter($this->events->fire($view->getName().':parent'))[0] : false]);
 
         // Reset view.tree if view.parent is root view
-        if(! session('view.parent'))
-        {
+        if (! session('view.parent')) {
             session(['view.tree' => '']);
-        }
-        else
-        {
+        } else {
             // Trim all descendant of view.parent from view.tree
             // This way we "go up" in the tree
             $viewTree = session('view.tree');
             $viewParent = session('view.parent');
-            if(strpos($viewTree, $viewParent) !== false)
-            {
+            if (strpos($viewTree, $viewParent) !== false) {
                 session(['view.tree' => substr($viewTree, 0, strpos($viewTree, $viewParent) + strlen($viewParent))]);
             }
         }
@@ -68,24 +64,19 @@ class BaseComposer
         $view->__unset('after');
         // Data placeholder
         $data = [];
-        if(! empty($before = $this->fireBefore($view)))
-        {
+        if (! empty($before = $this->fireBefore($view))) {
             $data = array_merge_recursive($data, $before);
         }
-        if(! empty($after = $this->fireAfter($view)))
-        {
+        if (! empty($after = $this->fireAfter($view))) {
             $data = array_merge_recursive($data, $after);
         }
-        if(! empty($ret = $this->fireData($view)))
-        {
+        if (! empty($ret = $this->fireData($view))) {
             $data = array_merge_recursive($data, $ret);
         }
-        if(! empty($ret = $this->fireComposite($view)))
-        {
+        if (! empty($ret = $this->fireComposite($view))) {
             $data = array_merge_recursive($data, $ret);
         }
-        foreach ($data as $key => $value)
-        {
+        foreach ($data as $key => $value) {
             $view->with($key, array_filter((array) $value));
         }
     }
@@ -99,14 +90,11 @@ class BaseComposer
     public function fireBefore(View $view)
     {
         $ret = [];
-        foreach(array_filter($this->events->fire($view->getName().':before', [$view])) as $value)
-        {
+        foreach (array_filter($this->events->fire($view->getName().':before', [$view])) as $value) {
             $ret['before'] = (array) $value;
             // Unset :before views who are ancestors of this view
-            foreach($ret['before'] as $key => $value)
-            {
-                if(strpos(session('view.tree'), $value) !== false)
-                {
+            foreach ($ret['before'] as $key => $value) {
+                if (strpos(session('view.tree'), $value) !== false) {
                     unset($ret['before'][$key]);
                 }
             }
@@ -124,14 +112,11 @@ class BaseComposer
     public function fireAfter(View $view)
     {
         $ret = [];
-        foreach(array_filter($this->events->fire($view->getName().':after', [$view])) as $value)
-        {
+        foreach (array_filter($this->events->fire($view->getName().':after', [$view])) as $value) {
             $ret['after'] = (array) $value;
             // Unset :after views who are ancestors of this view
-            foreach($ret['after'] as $key => $value)
-            {
-                if(strpos(session('view.tree'), $value) !== false)
-                {
+            foreach ($ret['after'] as $key => $value) {
+                if (strpos(session('view.tree'), $value) !== false) {
                     unset($ret['after'][$key]);
                 }
             }
@@ -149,8 +134,7 @@ class BaseComposer
     public function fireData(View $view)
     {
         $ret = [];
-        foreach(array_filter($this->events->fire($view->getName().':data', [$view])) as $array)
-        {
+        foreach (array_filter($this->events->fire($view->getName().':data', [$view])) as $array) {
             $ret = array_merge_recursive($array, $ret);
         }
         return $ret;
@@ -165,19 +149,14 @@ class BaseComposer
     public function fireComposite(View $view)
     {
         $ret = [];
-        foreach(array_filter($this->events->fire($view->getName().':composite', [$view])) as $array)
-        {
-            foreach ($array as $key => $value)
-            {
+        foreach (array_filter($this->events->fire($view->getName().':composite', [$view])) as $array) {
+            foreach ($array as $key => $value) {
                 $value = (array) $value;
                 // Handle before and after keys
-                if(($key == 'before') || ($key == 'after'))
-                {
-                    // Unset :before and :after views who are ancestors of this view
-                    foreach($value as $kkey => $vvalue)
-                    {
-                        if(strpos(session('view.tree'), $vvalue) !== false)
-                        {
+                if (($key == 'before') || ($key == 'after')) {
+                // Unset :before and :after views who are ancestors of this view
+                    foreach ($value as $kkey => $vvalue) {
+                        if (strpos(session('view.tree'), $vvalue) !== false) {
                             unset($value[$kkey]);
                         }
                     }
@@ -185,8 +164,7 @@ class BaseComposer
                 }
                 // Copy data from other keys to $ret
                 // which populate the $data view variable
-                foreach ($value as $val)
-                {
+                foreach ($value as $val) {
                     $ret[$key][] = $val;
                 }
             }
@@ -202,15 +180,12 @@ class BaseComposer
      */
     public function registerParentName($views, $parentName)
     {
-        foreach($views as $viewName)
-        {
-            if(! $this->events->hasListeners($viewName.':parent'))
-            {
-                $this->events->listen($viewName.':parent', function()use($parentName){
+        foreach ($views as $viewName) {
+            if (! $this->events->hasListeners($viewName.':parent')) {
+                $this->events->listen($viewName.':parent', function () use ($parentName) {
                     return $parentName;
                 });
             }
         }
     }
-
 }

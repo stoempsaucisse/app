@@ -1,5 +1,5 @@
                 <li class='user-list'>
-                    <a class="user-list" href='{{ url("user/$user->id/edit") }}'>
+                    <a class="user-list{{($user->trashed()) ? " trashed" : ""}}" href='{{ url("user/$user->id/edit") }}'>
 @if( isset($before) )
 @foreach($before as $templateName)
                         @include($templateName)

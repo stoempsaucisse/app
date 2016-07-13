@@ -13,8 +13,7 @@ if (! function_exists('removeValidationRule')) {
         //  Make sure $rules is an array
         $rulesArr = (array) $rules;
 
-        foreach ($rulesArr as $field => $rule)
-        {
+        foreach ($rulesArr as $field => $rule) {
             // Tested regexes for php on http://www.phpliveregex.com/
             $newRule = preg_replace("/($badRuleName(:[\w,]+)?(\||(?!.)))/i", '', $rulesArr[$field]);
             // $newRule = preg_replace("/(unique:[\w,]+)(\||(?!.))/i", '', $rulesArr[$field]);
@@ -61,8 +60,7 @@ if (! function_exists('getStandaloneValidationRules')) {
 
         //  Make sure $fields is an array
         $fieldsArr = $fields;
-        switch (true)
-        {
+        switch (true) {
             case is_null($fields):
                 $fieldsArr = array_keys($rulesArr);
                 break;
@@ -80,20 +78,15 @@ if (! function_exists('getStandaloneValidationRules')) {
 
         // Check if after: and before: depend on a fieldname listed in $fields
         // If so, add them too $rulesWithDep
-        if(!is_null($fields))
-        {
-            foreach ($rulesSometimesDep as $badRule)
-            {
+        if (!is_null($fields)) {
+            foreach ($rulesSometimesDep as $badRule) {
                 $counter = 0;
-                foreach ($rulesArr as $rule)
-                {
-                    if(preg_match('/' . $badRule . ':(\w+)/i', $rule, $matches) && in_array($matches[1], $fieldsArr))
-                    {
+                foreach ($rulesArr as $rule) {
+                    if (preg_match('/' . $badRule . ':(\w+)/i', $rule, $matches) && in_array($matches[1], $fieldsArr)) {
                         ++$counter;
                     }
                 }
-                if($counter)
-                {
+                if ($counter) {
                     array_push($rulesWithDep, $badRule);
                 }
             }
@@ -104,10 +97,8 @@ if (! function_exists('getStandaloneValidationRules')) {
         $regex = '/(confirmed|(' . implode('|', $rulesWithDep) . '):[\w,]+)(\||(?!.))/i';
 
         // Modify given rules
-        foreach ($rulesArr as $field => $rule)
-        {
-            if (in_array($field, $fieldsArr))
-            {
+        foreach ($rulesArr as $field => $rule) {
+            if (in_array($field, $fieldsArr)) {
                 // Test against regex
                 $newRule = preg_replace($regex, '', $rulesArr[$field]);
                 // Strip trailing '|' if present
@@ -116,7 +107,6 @@ if (! function_exists('getStandaloneValidationRules')) {
                 // Remove rules for fields who are NOT in $fields
                 unset($rulesArr[$field]);
             }
-            
         }
 
         // For convienience return string if given $rules is string

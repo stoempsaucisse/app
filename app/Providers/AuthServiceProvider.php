@@ -2,7 +2,9 @@
 
 namespace Microffice\Providers;
 
+use Microffice\User;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'Microffice\User' => 'Microffice\Policies\UserPolicy',
+        // 'Microffice\User' => 'Microffice\Policies\UserPolicy',
     ];
 
     /**
@@ -22,7 +24,7 @@ class AuthServiceProvider extends ServiceProvider
      * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
      * @return void
      */
-    public function boot(GateContract $gate)
+    public function boot(GateContract $gate, DispatcherContract $events)
     {
         $this->registerPolicies($gate);
 

@@ -64,10 +64,10 @@ class Handler extends ExceptionHandler
             $last_visited_page = Cache::pull($laravel_session . '_PreviousURL');
             return redirect($last_visited_page);
         } elseif ($e instanceof AuthorizationException) {
-            Log::error('Unautorized action from user: ' . Auth::user()->id . '. Route: ' . request()->path() . '. Method: ' . request()->method() . '.');
+            Log::error('Unautorized action from user_id: ' . Auth::user()->id . '. Route: /' . request()->path() . '. HTTP method: ' . request()->method() . '.');
             return back()->withErrors($e->getMessage());
         } elseif ($e instanceof ModelNotFoundException) {
-            Log::info('ModelNotFoundException from user: ' . Auth::user()->id . '. Route: ' . request()->path() . '. Method: ' . request()->method() . '.');
+            Log::info('ModelNotFoundException from user_id: ' . Auth::user()->id . '. Route: /' . request()->path() . '. HTTP method: ' . request()->method() . '.');
             $e = new HttpException(404, $e->getModel());
         }
         return parent::render($request, $e);

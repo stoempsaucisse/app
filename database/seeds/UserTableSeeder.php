@@ -13,13 +13,13 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        include_once('users.php');
+        include('users.php');
         if(is_file(dirname(__FILE__ . '/private_users.php')))
         {
-            include_once('private_users.php');
+            include('private_users.php');
         }
         foreach ($users as $user) {
-            Microffice\User::create($user);
+            User::create($user);
         }
     }
 }

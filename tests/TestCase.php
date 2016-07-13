@@ -29,8 +29,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     protected function setDB($database)
     {
         Config::set('database.default', $database);
-        if($database == 'sqlite' || $database == 'sqlite_memory')
-        {
+        if ($database == 'sqlite' || $database == 'sqlite_memory') {
             Artisan::call('migrate:refresh');
         }
     }
@@ -65,7 +64,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         // Gate partial mock for raw()
         return Mockery::mock(Illuminate\Auth\Access\Gate::class . '[raw]', [$app = app(), function () use ($app) {
                 return $app['auth']->user();
-            }]);
+        }]);
     }
 
     /**
@@ -73,12 +72,9 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     */
     protected function setTimes($mock, $n, $bool)
     {
-        if(is_int($n))
-        {
+        if (is_int($n)) {
             $mock->shouldAllowMockingProtectedMethods()->shouldReceive('raw')->andReturn($bool)->times($n);
-        }
-        else
-        {
+        } else {
             $mock->shouldAllowMockingProtectedMethods()->shouldReceive('raw')->andReturn($bool)->$n();
         }
 

@@ -16,8 +16,7 @@ class UserComposer
     public function fieldset(View $view)
     {
         $rules = User::$rules;
-        if($view->getData()['action'] == 'update')
-        {
+        if ($view->getData()['action'] == 'update') {
             $rules['password'] = removeValidationRule($rules['password'], 'required');
         }
         $view->with('rules', $rules);

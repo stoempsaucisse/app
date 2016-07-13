@@ -47,8 +47,7 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        if(Gate::denies('create', User::class))
-        {
+        if (Gate::denies('create', User::class)) {
             throw new AuthorizationException(trans('error.create', ['resource' => trans_choice('user.user', 1)]), 403);
         }
         return view('user.form', ['action' => 'create']);
@@ -61,8 +60,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if($this->users->saveNew($request->input('user')))
-        {
+        if ($this->users->saveNew($request->input('user'))) {
             return redirect()->action('UserController@index');
         }
         return redirect()->action('UserController@create')->withInput($request->except(['password', 'password_confirmation']));
@@ -87,8 +85,7 @@ class UserController extends Controller
     public function edit($userId)
     {
         $user = $this->users->findById($userId);
-        if(Gate::denies('update', [User::class, $userId]))
-        {
+        if (Gate::denies('edit', [User::class, $userId])) {
             return redirect()->action('UserController@show', ['id' => $userId]);
             // throw new AuthorizationException(trans('error.update', ['resource' => trans_choice('user.user', 1)]), 403);
         }
@@ -102,8 +99,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $userId)
     {
-        if($this->users->update($userId, array_filter($request->input('user'))))
-        {
+        if ($this->users->update($userId, array_filter($request->input('user')))) {
             return redirect()->action('UserController@index');
         }
         return redirect('user/' . $userId)->withInput($request->except(['password', 'password_confirmation']));
@@ -116,8 +112,7 @@ class UserController extends Controller
      */
     public function destroy($userId)
     {
-        if($this->users->delete($userId))
-        {
+        if ($this->users->delete($userId)) {
             return redirect()->action('UserController@index');
         }
         return redirect('user/' . $userId);

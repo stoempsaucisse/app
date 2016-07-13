@@ -38,7 +38,7 @@ class EventServiceProvider extends ServiceProvider
 
         /**
          *  Register view listeners here
-         *  
+         *
          *  view.name:before        return view.name(s) to render 'before' this view.name
          *  view.name:after         return view.name(s) to render 'after' this view.name
          *  view.name:data          return an array of data to bound to this view

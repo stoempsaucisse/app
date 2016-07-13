@@ -20,8 +20,7 @@ class HelpersTest extends TestCase
             'required_with_all:anotherfield,value,value2,value3'
         ];
 
-        foreach ($badRules as $badRule)
-        {
+        foreach ($badRules as $badRule) {
             $rule = "alpha|beta:field,value|$badRule";
             $ret = removeValidationRule($rule, $badRule);
 
@@ -78,7 +77,7 @@ class HelpersTest extends TestCase
     public function testGetStandaloneValidationRules()
     {
         // As of today, these are the rules that depend on other fields :
-        // 
+        //
         // * after: (could use another field)
         // * before: (not sure, but no reason it does not work as after:)
         // * confirmed
@@ -105,9 +104,8 @@ class HelpersTest extends TestCase
         ];
 
         // Test regex is OK :)
-        foreach ($badRules as $badRule)
-        {
-            // Test with (string) $rules and without $fields
+        foreach ($badRules as $badRule) {
+        // Test with (string) $rules and without $fields
             // 1) Test when rules definition starts with a rule to strip
             $rules = $badRule . '|alpha|omega';
             $ret = getStandaloneValidationRules($rules);
@@ -234,9 +232,8 @@ class HelpersTest extends TestCase
         $params = ['table', 'column'];
         $optionalParams = ['id', 'idColumn', ''];
         // Test for all 3 forms of unique: rule
-        foreach ($optionalParams as $optionalParm)
-        {
-            // Test all positions of unique: in rule string
+        foreach ($optionalParams as $optionalParm) {
+        // Test all positions of unique: in rule string
             $badRule = 'unique:' . implode(',', $params);
             $rules = "alpha|beta|$badRule";
             $ret = removeUniqueRules($rules);

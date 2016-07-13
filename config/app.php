@@ -155,6 +155,7 @@ return [
         Microffice\Providers\AuthServiceProvider::class,
         Microffice\Providers\EventServiceProvider::class,
         Microffice\Providers\RouteServiceProvider::class,
+        Microffice\AccessControl\Support\ServiceProvider::class,
 
         /*
          * Dependencies Service Providers...
@@ -207,6 +208,9 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
+
+        // Microffice specific aliases
+        'ACL'       => Microffice\AccessControl\Support\Facades\ACL::class,
 
     ],
 

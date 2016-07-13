@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Security\Acl\Permission\MaskBuilderInterface as MaskBuilderContract;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -16,6 +18,21 @@ $factory->define(Microffice\User::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'email' => $faker->email,
         'password' => bcrypt(str_random(10)),
-        'remember_token' => str_random(10),
+        'remember_token' => bcrypt(str_random(10)),
+    ];
+});
+
+$factory->define(Microffice\AccessControl\Acl::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => null,
+    ];
+});
+
+$factory->define(Microffice\AccessControl\Ace::class, function (Faker\Generator $faker) {
+    return [
+        'object' => Microffice\User::class,
+        'object_id' => null,
+        'mask' => app(MaskBuilderContract::class)
+                    ->add('view'),
     ];
 });

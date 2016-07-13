@@ -5,8 +5,9 @@ namespace Microffice;
 use Microffice\Traits\UpdateRules;
 
 use Illuminate\Auth\Authenticatable;
-use Jenssegers\Mongodb\Eloquent\Model;/*/
+/*use Jenssegers\Mongodb\Eloquent\Model;/*/
 use Illuminate\Database\Eloquent\Model;/**/
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -18,7 +19,24 @@ class User extends Model implements
     AuthorizableContract,
     CanResetPasswordContract
 {
-    use UpdateRules, Authenticatable, Authorizable, CanResetPassword;
+    use UpdateRules, SoftDeletes, Authenticatable, Authorizable, CanResetPassword;
+
+    /**
+     * Set mutator to encrypt the password on insert
+     *
+     * @return void
+     */
+    protected function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that are mass assignable.

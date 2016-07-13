@@ -17,7 +17,7 @@ class UserControllerTest extends TestCase
     public function testGetUserReturnsUserList()
     {
         // Authenticating User but not Dworkin
-        $user = User::where('name', '!=', 'Dworkin')->first();
+        $user = User::where('name', 'Dworkin')->first();
         $this->actingAs($user);
 
         $this->visit('/user')
@@ -33,7 +33,7 @@ class UserControllerTest extends TestCase
     public function testGetUserCreateReturnsForm()
     {
         // Authenticating User but not Dworkin
-        $user = User::where('name', '!=', 'Dworkin')->first();
+        $user = User::where('name', 'Dworkin')->first();
         $this->actingAs($user);
 
         $this->visit('/user/create')
@@ -54,7 +54,7 @@ class UserControllerTest extends TestCase
     public function testPostValidUserInfoRedirectsToUserIndex()
     {
         // Authenticating User but not Dworkin
-        $user = User::where('name', '!=', 'Dworkin')->first();
+        $user = User::where('name', 'Dworkin')->first();
         $this->actingAs($user);
 
         $newUser = factory(Microffice\User::class)->make();
@@ -75,7 +75,7 @@ class UserControllerTest extends TestCase
     public function testPostInvalidUserInfoRedirectsToUserCreate()
     {
         // Authenticating User but not Dworkin
-        $user = User::where('name', '!=', 'Dworkin')->first();
+        $user = User::where('name', 'Dworkin')->first();
         $this->actingAs($user);
 
         $newUser = factory(Microffice\User::class)->make();
@@ -101,7 +101,7 @@ class UserControllerTest extends TestCase
     public function testGetUserIdReturnsFormWithUserData()
     {
         // Authenticating User but not Dworkin
-        $user = User::where('name', '!=', 'Dworkin')->first();
+        $user = User::where('name', 'Dworkin')->first();
         $this->actingAs($user);
 
         $this->visit('/user/' . $user->id)
@@ -120,8 +120,9 @@ class UserControllerTest extends TestCase
     public function testPostUserIdUpdatesUserDataRedirectToUserIndex()
     {
         // Authenticating User but not Dworkin
-        $user = User::where('name', '!=', 'Dworkin')->first();
+        $user = User::where('name', 'Dworkin')->first();
         $this->actingAs($user);
+        $user = User::where('name', '!=', 'Dworkin')->first();
         $newName = rand(10000, 999999);
 
         $this->visit('/user/' . $user->id . '/edit')
@@ -141,7 +142,7 @@ class UserControllerTest extends TestCase
     public function testPostUserIdInvalidDataRedirectToUserForm()
     {
         // Authenticating User but not Dworkin
-        $user = User::where('name', '!=', 'Dworkin')->first();
+        $user = User::where('name', 'Dworkin')->first();
         $this->actingAs($user);
         $newPassword = 'baba';
 
@@ -171,12 +172,9 @@ class UserControllerTest extends TestCase
              ->press(trans('form.delete'))
              ->seePageIs('/user');
         
-        try
-        {
+        try {
             $newUser = User::findOrFail($user->id);
-        }
-        catch(Illuminate\Database\Eloquent\ModelNotFoundException $expected)
-        {
+        } catch (Illuminate\Database\Eloquent\ModelNotFoundException $expected) {
             return;
         }
         $this->fail('Illuminate\Database\Eloquent\ModelNotFoundException was not raised');

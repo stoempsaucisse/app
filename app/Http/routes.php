@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Microffice's basic routes. Should be extended by package...
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 /*
 |--------------------------------------------------------------------------
 | Routes File

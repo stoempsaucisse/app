@@ -2,6 +2,13 @@
 
 namespace Microffice\Http\Controllers;
 
+/**
+ * User Controller
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\User;
 use Microffice\Repositories\UserRepository;
 use Microffice\Http\Requests;

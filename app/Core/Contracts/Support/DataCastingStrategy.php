@@ -2,6 +2,12 @@
 
 namespace Microffice\Core\Contracts\Support;
 
+/**
+ * Data Casting Interface
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 interface DataCastingStrategy
 {
     /**

@@ -4,6 +4,7 @@
 <html>
     <head>
         <title>@yield('title')</title>
+        <meta name="author" content="stoempsaucisse@hotmail.com">
 @yield('meta')
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css' type='text/css' />
 @yield('style')

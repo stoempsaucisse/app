@@ -2,6 +2,13 @@
 
 namespace Microffice\Providers;
 
+/**
+ * Basic services provided to Microffice
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,8 +21,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // Set some usefull constants in globalscope
-        define('THROW_ON_INVALID_ARG', 0x1);
-        define('SKIP_ON_INVALID_ARG', 0x2);
+        if (! defined('THROW_ON_INVALID_ARG')) {
+            define('THROW_ON_INVALID_ARG', 0x1);
+        }
+        if (! defined('THROW_ON_INVALID_ARG')) {
+            define('SKIP_ON_INVALID_ARG', 0x2);
+        }
         // Bind :before, :after, :data and :composite data to any view.
         view()->composer('*', 'Microffice\Http\ViewComposers\BaseComposer');
 

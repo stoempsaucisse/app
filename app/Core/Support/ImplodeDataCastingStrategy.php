@@ -2,9 +2,17 @@
 
 namespace Microffice\Core\Support;
 
+/**
+ * This class implodes an array of values to a string
+ *
+ * When $nullify === true empty segments are translated to null
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\Core\Contracts\Support\DataCastingStrategy as DataCastingStrategyContract;
 
-class ImplodeDataCastingStrategy extends AbstractArrayDataCastingStrategy implements DataCastingStrategyContract
+class ImplodeDataCastingStrategy extends AbstractDataCastingStrategy implements DataCastingStrategyContract
 {
     /**
      * Nullify empty strings?
@@ -28,10 +36,9 @@ class ImplodeDataCastingStrategy extends AbstractArrayDataCastingStrategy implem
     /**
      * {@inheritdoc}
      */
-    public function cast($data, $default = null)
+    protected function applyCast($data, $default)
     {
-        $segments = $this->extractValues($data);
-        return implode(self::SEGMENTS_SEPARATOR, $segments);
+        return implode(self::SEGMENTS_SEPARATOR, (array) $data);
     }
 
     /**
@@ -41,8 +48,8 @@ class ImplodeDataCastingStrategy extends AbstractArrayDataCastingStrategy implem
     {
         $data = explode(self::SEGMENTS_SEPARATOR, $data);
         if ($this->nullify) {
-            foreach($data as $key => $value) {
-                if($value === '') {
+            foreach ($data as $key => $value) {
+                if ($value === '') {
                     $data[$key] = null;
                 }
             }

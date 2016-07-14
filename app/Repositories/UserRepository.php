@@ -2,6 +2,13 @@
 
 namespace Microffice\Repositories;
 
+/**
+ * User Reporistory
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\AccessControl\Contracts\AccessControl as AccessControlContract;
 use Microffice\Core\Repositories\AbstractBaseEloquentRepository;
 

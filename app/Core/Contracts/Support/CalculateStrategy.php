@@ -2,6 +2,12 @@
 
 namespace Microffice\Core\Contracts\Support;
 
+/**
+ * Calculate Strategy Interface
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 interface CalculateStrategy
 {
     /**

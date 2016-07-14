@@ -2,6 +2,15 @@
 
 namespace Microffice\AccessControl;
 
+/**
+ * This class is responsible to decide whether a User is granted rights on
+ * given Object Identity.
+ *
+ * There is still some work here :)
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\AccessControl\Contracts\DecisionMaker as DecisionMakerContract;
 use Microffice\AccessControl\Contracts\ObjectIdentityFactory as ObjectIdentityFactoryContract;
 use Microffice\AccessControl\Support\MaskDataCastingStrategy;
@@ -10,8 +19,6 @@ use Microffice\Core\Support\UniqueItemsCollection;
 use Microffice\User;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
-// use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-// use Illuminate\Support\Collection;
 use Symfony\Component\Security\Acl\Permission\MaskBuilderInterface as MaskBuilderContract;
 use InvalidArgumentException;
 
@@ -135,11 +142,7 @@ class DecisionMaker implements DecisionMakerContract
     }/**/
 
     /**
-     * Checks if is granted ability for given object identity
-     *
-     * @param string    $ability
-     * @param array     $arguments
-     * @return bool
+     * {@inheritdoc}
      */
     public function grants($ability, array $arguments)
     {
@@ -176,11 +179,7 @@ class DecisionMaker implements DecisionMakerContract
     }
 
     /**
-     * Checks if is granted ability for given object identity
-     *
-     * @param string    $ability
-     * @param array     $arguments
-     * @return bool
+     * {@inheritdoc}
      */
     public function denies($ability, $arguments)
     {
@@ -326,12 +325,7 @@ class DecisionMaker implements DecisionMakerContract
     }
 
     /**
-     * Checks if ability is guarded for all objects.
-     *
-     * @param string        $ability
-     * @param string        $objectIdentity
-     * @param string|void   $objectField
-     * @return bool
+     * {@inheritdoc}
      */
     public function decidesForAll($ability, $objectIdentity, $objectField = null)
     {
@@ -359,11 +353,7 @@ class DecisionMaker implements DecisionMakerContract
     }
 
     /**
-     * Get allowed ids for given object / mask combination.
-     *
-     * @param string    $ability
-     * @param string    $objectIdentity
-     * @return Illuminate\Database\Eloquent\Collection
+     * {@inheritdoc}
      */
     public function getAllowedIds($ability, $objectIdentity)
     {

@@ -2,6 +2,12 @@
 
 namespace Microffice\AccessControl;
 
+/**
+ * Object Identity Factory
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\AccessControl\Contracts\ObjectIdentityFactory as ObjectIdentityFactoryContract;
 use Microffice\AccessControl\Contracts\ObjectIdentity as ObjectIdentityContract;
 use InvalidArgumentException;
@@ -35,11 +41,7 @@ class ObjectIdentityFactory implements ObjectIdentityFactoryContract
     }
 
     /**
-     * Make a new Object Identity
-     *
-     * @param  string       $name
-     * @param  array|void   $details
-     * @return ObjectIdentity
+     * {@inheritdoc}
      */
     public function make($name)
     {
@@ -56,9 +58,7 @@ class ObjectIdentityFactory implements ObjectIdentityFactoryContract
     }
 
     /**
-     * Get key names
-     *
-     * @return array    $objectKeys
+     * {@inheritdoc}
      */
     public function getKeyNames()
     {

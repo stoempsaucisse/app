@@ -2,10 +2,27 @@
 
 namespace Microffice\Core\Support;
 
+/**
+ * This class just returns the value as-is excepted when
+ * the KEYABLE_VALUES flag is set which means that the values returned
+ * will be used as array keys and should be either an integer or string.
+ * In this case :
+ *      - if value is an array or object we "reduce" it to a single value
+ *        by popping (default) or shifting (if ARRAY_SHIFT flag is set)
+ *        a key-value pair from the element and select
+ *        the key or value if PREFER_KEY flag is set :
+ *              + if selected value is an integer or string, return it
+ *              + if selected value is a boolean or nul return the $default (which could be null)
+ *      - if given value is null or boolean we return
+ *        the $default value (which could be null)
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\Core\Contracts\Support\DataCastingStrategy as DataCastingStrategyContract;
 use Microffice\Core\Support\Traits\BaseUncast;
 
-class BaseDataCastingStrategy implements DataCastingStrategyContract
+class BaseDataCastingStrategy extends AbstractDataCastingStrategy implements DataCastingStrategyContract
 {
     use BaseUncast;
 
@@ -26,33 +43,24 @@ class BaseDataCastingStrategy implements DataCastingStrategyContract
      * @param  array    $flags
      * @return void
      */
-    public function __construct($flags = 0x0)
+    public function __construct($flags = 0x0, array $keys = null)
     {
+        parent::__construct($keys);
         $this->flags = $flags;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function cast($data, $default = null)
+    protected function applyCast($data, $default)
     {
-        if (($this->flags & self::KEYABLE_VALUES) && !(is_string($data) || is_numeric($data))) {
-            if ($default !== null) {
-                return $default;
+        if (($this->flags & self::KEYABLE_VALUES)) {
+            if (is_array($data) || is_object($data)) {
+                $data = $this->reduce($this->getArrayableItems($data));
             }
-            return $this->reduce($this->getArrayableItems($data));
+            return (is_bool($data) || $data === null) ? $default : $data;
         }
-        return (bool) ($this->flags & self::PREFER_KEY) ? $default : $data;
-
-        // var_dump($data, $default);
-        // if (is_string($data) || is_numeric($data)) {
-        //     return ($default === null) ? $data : $default;
-        // }
-        // if (($this->flags & self::PREFER_KEY) && is_array($data)) {
-        //     $value = ($this->flags & self::ARRAY_SHIFT) ? array_shift($data) : array_pop($data);
-        //     return (empty($value) && ($this->flags & self::KEYABLE_VALUES)) ? $default : $value ;
-        // }
-        // return $default;
+        return $data;
     }
 
     /**
@@ -61,41 +69,16 @@ class BaseDataCastingStrategy implements DataCastingStrategyContract
      * @param  array    $data
      * @return void
      */
-    public function reduce($data)
+    protected function reduce($data)
     {
-        if($this->flags & self::PREFER_KEY) {
-            $keys = array_keys($data);
-            $value = ($this->flags & self::ARRAY_SHIFT) ? array_shift($keys) : array_pop($keys);
-            if (! empty($value)) {
-                return $value;
-            }
-        }
+        $keys = array_keys($data);
         $value = ($this->flags & self::ARRAY_SHIFT) ? array_shift($data) : array_pop($data);
-        if (is_string($value) || is_numeric($value)) {
-            return $value;
+        if (is_array($value) || is_object($value)) {
+            return $this->reduce($this->getArrayableItems($value));
         }
-        
-        return $this->reduce($this->getArrayableItems($value));
-    }
-
-    /**
-     * Results array of items from Collection or Arrayable.
-     *
-     * @param  mixed  $items
-     * @return array
-     */
-    protected function getArrayableItems($items)
-    {
-        if (is_array($items)) {
-            return $items;
-        } elseif ($items instanceof Arrayable) {
-            return $items->toArray();
-        } elseif ($items instanceof Jsonable) {
-            return json_decode($items->toJson(), true);
-        } elseif ($items instanceof JsonSerializable) {
-            return $items->jsonSerialize();
+        if ($this->flags & self::PREFER_KEY) {
+            $value = ($this->flags & self::ARRAY_SHIFT) ? array_shift($keys) : array_pop($keys);
         }
-
-        return (array) $items;
+        return $value;
     }
 }

@@ -2,6 +2,13 @@
 
 namespace Microffice\AccessControl\Contracts;
 
+/**
+ * Object Identity Interface
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 interface ObjectIdentity
 {
     /**

@@ -2,6 +2,29 @@
 
 namespace Microffice\AccessControl\Support;
 
+/**
+ * Access Controm Service Provider
+ *
+ * Register :
+ *      - Decision Maker used implementatio (singleton)
+ *      - Mask Builder used implementation
+ *      - Object Identity Factory used implementation (singleton)
+ *      - Object Identity used implementation
+ * Boots :
+ *      - register Core Policy methods
+ *      - setup listen event to list avaiable Object Identities names (trait)
+ *      - setup listen event to list avaiable masks (trait)
+ *      - register masks provided by AccessControl package
+ *        aka. from Symfony\Component\Security\Acl\Permission\MaskBuilder MaskBuilder
+ *      - setup listen events on some basic model create/delete/restore :
+ *              + on User create -> create Acl and basic Aces
+ *              + on User delete...
+ *              + on User restore...
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\AccessControl\Ace;
 use Microffice\AccessControl\Acl;
 use Microffice\AccessControl\Contracts\DecisionMaker as DecisionMakerContract;

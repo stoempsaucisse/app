@@ -2,6 +2,13 @@
 
 namespace Microffice\AccessControl;
 
+/**
+ * Acl Repository
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\Core\Repositories\AbstractBaseEloquentRepository;
 
 class AclRepository extends AbstractBaseEloquentRepository
@@ -17,11 +24,7 @@ class AclRepository extends AbstractBaseEloquentRepository
     }
 
     /**
-     * Mutate validation rules before updating if needed.
-     *
-     * @param  array $data
-     * @param  array $rules
-     * @return array $rules
+     * {@inheritdoc}
      */
     public function mutateRulesBeforeUpdate($data, $rules)
     {
@@ -29,10 +32,7 @@ class AclRepository extends AbstractBaseEloquentRepository
     }
 
     /**
-     * Mutate data before updating if needed.
-     *
-     * @param  array validated $data
-     * @return array $data
+     * {@inheritdoc}
      */
     public function mutateDataBeforeUpdate($data)
     {

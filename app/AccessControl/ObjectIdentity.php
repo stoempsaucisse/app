@@ -2,6 +2,12 @@
 
 namespace Microffice\AccessControl;
 
+/**
+ * Object Identity
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\AccessControl\Contracts\ObjectIdentity as ObjectIdentityContract;
 use Microffice\AccessControl\Contracts\ObjectIdentityFactory as ObjectIdentityFactoryContract;
 use InvalidArgumentException;
@@ -32,10 +38,9 @@ class ObjectIdentity implements ObjectIdentityContract
         $this->factory = $objectIdentityFactory;
         $this->objectIdentity = $objectIdentity;
     }
+    
     /**
-     * Get the Object Identity
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function get()
     {
@@ -43,11 +48,7 @@ class ObjectIdentity implements ObjectIdentityContract
     }
 
     /**
-     * Set portion on Object Identity
-     *
-     * @param  string   $name
-     * @param  string   $value
-     * @return array
+     * {@inheritdoc}
      */
     public function set($name, $value)
     {

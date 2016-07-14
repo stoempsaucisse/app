@@ -2,6 +2,13 @@
 
 namespace Microffice\AccessControl;
 
+/**
+ * Ace model
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\Traits\UpdateRules;
 
 /*use Jenssegers\Mongodb\Eloquent\Model;/*/

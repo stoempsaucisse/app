@@ -2,6 +2,14 @@
 
 namespace Microffice\Policies;
 
+/**
+ * Basic User Policies. I stil MUST decide if the Auth part should be standalone
+ * or always associated to Access Control package?
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -98,8 +106,7 @@ class UserPolicy
     public function delete(User $user, $policyClass, $userId)
     {
         //  This is a stub, waiting for a real role + perms implementation
-        if($user->id == $userId)
-        {
+        if ($user->id == $userId) {
             return false;
         }
         return true;

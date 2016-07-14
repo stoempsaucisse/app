@@ -2,13 +2,22 @@
 
 namespace Microffice\Traits;
 
+/**
+ * This traits extends Models by adding a method that
+ * modify the validations rules with "unique" restraint
+ * to except given id
+ *
+ * It seems that Laravel unique rule has a solution for this.
+ *
+ * It seems too, that problems like required password on update
+ * should be adressed either by always updating password separatly
+ * or with required_with + hidden field only present on update?
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 trait UpdateRules
 {
-    // This traits extends Models by adding a method that
-    // modify the validations rules with "unique" restraint
-    // to except given id
-
-
     /**
     * Validation rules for current Model
     * where unique constraints accept this Model's value

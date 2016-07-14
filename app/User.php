@@ -2,6 +2,13 @@
 
 namespace Microffice;
 
+/**
+ * User model
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\Traits\UpdateRules;
 
 use Illuminate\Auth\Authenticatable;

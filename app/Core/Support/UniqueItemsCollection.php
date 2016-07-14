@@ -2,6 +2,29 @@
 
 namespace Microffice\Core\Support;
 
+/**
+ *
+ * This class is used to create a collection without any duplicates.
+ *
+ * Any added element resolves to a key and value(s) pair by use of
+ * appropriate Data Casting Strategies.
+ *
+ * To pass the original Illuminate\Support\Collection test this class has
+ * been implemented to push single value elements (without creation of an
+ * appropriate key) on the $items array. This NOT the expected behavior and
+ * this will be modified in the future.
+ *
+ * Expected behaviour (when no key is provided or isn't casted) could/should be :
+ *      - a single item collection with numeric key that just combine the values
+ *        (with appropriate Data Casting Strategy)
+ *      - a multi item collection with numeric keys where every value is unique
+ *        (even when value is an array or object)
+ *
+ * !!! THIS HAS STILL TO BE IMPLEMENTED !!!
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\Core\Contracts\Support\DataCastingStrategy as DataCastingStrategyContract;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection as BaseCollection;
@@ -73,7 +96,7 @@ class UniqueItemsCollection extends BaseCollection
             $this->type = get_class($element);
             return;
         }
-        if(gettype($element) == 'array'){
+        if (gettype($element) == 'array') {
             $this->type = 'array';
             return;
         }
@@ -89,7 +112,7 @@ class UniqueItemsCollection extends BaseCollection
      */
     public function setStrategy(DataCastingStrategyContract $strategy, $strategyName, $onBadTypeOfElement = SKIP_ON_INVALID_ARG)
     {
-        if(! empty($this->items)) {
+        if (! empty($this->items)) {
             if ((bool) $onBadTypeOfElement & THROW_ON_INVALID_ARG) {
                 throw new BadMethodCallException("Strategies are immutable once the collection has been populated !", 1);
             }
@@ -112,10 +135,10 @@ class UniqueItemsCollection extends BaseCollection
             $this->setType($element);
         }
         $type = gettype($element);
-        if($type == 'object') {
+        if ($type == 'object') {
             return $this->type == get_class($element);
         }
-        if($type == 'array'){
+        if ($type == 'array') {
             return $this->type == 'array';
         }
         return ($type == 'integer' || $type == 'string' || $type == 'boolean');
@@ -400,7 +423,7 @@ class UniqueItemsCollection extends BaseCollection
             return $return;
         }
         $elements = [];
-        foreach(Arr::flatten($this->items, $depth) as $element) {
+        foreach (Arr::flatten($this->items, $depth) as $element) {
             $elements[] = $this->getArrayableItems($element);
         }
         $return->rawAddElements($elements);
@@ -588,7 +611,7 @@ class UniqueItemsCollection extends BaseCollection
         $return = clone $this;
 
         $results = [];
-        foreach ($this->getArrayableItems($items) as $key =>  $item) {
+        foreach ($this->getArrayableItems($items) as $key => $item) {
             $results[$this->resolveElementKey($item, $key)] = $this->valueCasting->cast($item);
         }
 

@@ -2,6 +2,15 @@
 
 namespace Microffice\AccessControl\Support\Traits;
 
+/**
+ * This traits registers object identities from $this->objectIdentities array
+ * You MUST add
+ * $this->registerAclObjectIdentities($events);
+ * in your boot method
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\AccessControl\DecisionMaker;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 

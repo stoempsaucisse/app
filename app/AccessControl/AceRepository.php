@@ -2,6 +2,13 @@
 
 namespace Microffice\AccessControl;
 
+/**
+ * Ace Repository
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\Core\Repositories\AbstractBaseEloquentRepository;
 
 class AceRepository extends AbstractBaseEloquentRepository

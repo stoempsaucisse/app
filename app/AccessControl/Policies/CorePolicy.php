@@ -2,6 +2,14 @@
 
 namespace Microffice\AccessControl\Policies;
 
+/**
+ * This class serves as connector between Laravel's Gate and Microffice's Decision Maker
+ *
+ * It consists of a catch-all method that passes the right arguments to the Decision Maker
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\AccessControl\Contracts\DecisionMaker as DecisionMakerContract ;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 

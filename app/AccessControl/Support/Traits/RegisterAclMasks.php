@@ -2,19 +2,21 @@
 
 namespace Microffice\AccessControl\Support\Traits;
 
+/**
+ * This traits registers masks from
+ * optional $this->masks array and optional $mask argument array.
+ * $this->registerAclMasks($events);
+ * in your boot method
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\AccessControl\DecisionMaker;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Symfony\Component\Security\Acl\Permission\MaskBuilderInterface as MaskBuilderContract;
 
 trait RegisterAclMasks
 {
-    // This traits registers masks from
-    // optional $this->masks array and optional $mask argument array
-    //
-    // You need to add
-    // $this->registerAclMasks($events);
-    // in your boot method
-
     /**
      * Register object masks for Access Control.
      *

@@ -2,6 +2,13 @@
 
 namespace Microffice\Core\Repositories;
 
+/**
+ * This abstract class provides a basic Repository most Resources should
+ * inherit from.
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 use Microffice\Core\Contracts\ResourceRepository as ResourceRepositoryContract;
 use Microffice\AccessControl\Contracts\DecisionMaker as DecisionMakerContract ;
 
@@ -83,9 +90,7 @@ abstract class AbstractBaseEloquentRepository implements ResourceRepositoryContr
     }
 
     /**
-     * Get all Resources.
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function findAll()
     {
@@ -103,10 +108,7 @@ abstract class AbstractBaseEloquentRepository implements ResourceRepositoryContr
     }
     
     /**
-     * Get one Resource.
-     *
-     * @param  integer $resourceId
-     * @return Resource | Exception
+     * {@inheritdoc}
      */
     public function findById($resourceId)
     {
@@ -118,12 +120,8 @@ abstract class AbstractBaseEloquentRepository implements ResourceRepositoryContr
     }
 
     /**
-    * Validate the specified Resource data.
-    *
-    * @param array $data
-    * @param array $rules
-    * @return Bool
-    */
+     * {@inheritdoc}
+     */
     public function validate($data, $rules = null)
     {
         $resourceClassName = $this->resourceClassName;
@@ -139,10 +137,7 @@ abstract class AbstractBaseEloquentRepository implements ResourceRepositoryContr
     }
 
     /**
-     * Create and save a new Resource to database.
-     *
-     * @param  array $data
-     * @return Resource instance
+     * {@inheritdoc}
      */
     public function saveNew($data)
     {
@@ -173,11 +168,7 @@ abstract class AbstractBaseEloquentRepository implements ResourceRepositoryContr
     }
 
     /**
-     * Update existing Resource.
-     *
-     * @param  integer $resourceId
-     * @param  array validated $data
-     * @return bool
+     * {@inheritdoc}
      */
     public function update($resourceId, $data)
     {
@@ -219,10 +210,7 @@ abstract class AbstractBaseEloquentRepository implements ResourceRepositoryContr
     }
 
     /**
-     * Delete Resource from database.
-     *
-     * @param  integer $resourceId
-     * @return bool
+     * {@inheritdoc}
      */
     public function delete($resourceId)
     {

@@ -2,6 +2,13 @@
 
 namespace Microffice\AccessControl\Contracts;
 
+/**
+ * Decision Maker Interface
+ *
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 interface DecisionMaker
 {
 

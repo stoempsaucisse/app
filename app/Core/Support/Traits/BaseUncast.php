@@ -2,6 +2,11 @@
 
 namespace Microffice\Core\Support\Traits;
 
+/**
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 trait BaseUncast
 {
     /**

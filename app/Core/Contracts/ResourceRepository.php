@@ -1,12 +1,11 @@
 <?php namespace Microffice\Core\Contracts;
 
 /**
-* Resources that CANNOT be altered from the UI.
-*
-* These Resources are fully mangable from the App using
-* index(), store(), show(), update() and destroy()
-* @return Response
-*/
+ * Resource Repository Interface
+ *
+ * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
+ */
+
 interface ResourceRepository
 {
     
@@ -26,6 +25,15 @@ interface ResourceRepository
     public function findById($resourceId);
 
     /**
+    * Validate the specified Resource data.
+    *
+    * @param array $data
+    * @param array $rules
+    * @return Bool
+    */
+    public function validate($data, $rules = null);
+
+    /**
      * Create and save a new resource to database.
      *
      * @param  array $data
@@ -41,23 +49,6 @@ interface ResourceRepository
      * @return Resource instance
      */
     public function update($resourceId, $data);
-
-    /**
-     * Mutate validation rules before updating if needed.
-     *
-     * @param  array $data
-     * @param  array $rules
-     * @return array $rules
-     */
-    public function mutateRulesBeforeUpdate($data, $rules);
-
-    /**
-     * Mutate data before updating if needed.
-     *
-     * @param  array validated $data
-     * @return array $data
-     */
-    public function mutateDataBeforeUpdate($data);
 
     /**
      * Delete resource from database.

@@ -2,7 +2,7 @@
 
 namespace Microffice\Repositories;
 
-use Microffice\AccessControl\Contracts\AccessControl as AccessControlContract;
+use Microffice\AccessControl\Contracts\DecisionMaker as DecisionMakerContract;
 use Microffice\Core\Repositories\AbstractBaseEloquentRepository;
 
 class UserRepository

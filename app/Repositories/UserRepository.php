@@ -9,7 +9,7 @@ namespace Microffice\Repositories;
  * @author Stoempsaucisse <stoempsaucisse@hotmail.com>
  */
 
-use Microffice\AccessControl\Contracts\AccessControl as AccessControlContract;
+use Microffice\AccessControl\Contracts\DecisionMaker as DecisionMakerContract;
 use Microffice\Core\Repositories\AbstractBaseEloquentRepository;
 
 use Microffice\User;
@@ -72,7 +72,7 @@ class UserRepository extends AbstractBaseEloquentRepository
             throw new AuthorizationException(trans('error.view-list', ['resources' => trans_choice(lcfirst($this->resourceName) . '.' . lcfirst($this->resourceName), 2)]), 403);
         }
 
-        $resource = app(AccessControlContract::class);
+        $resource = app(DecisionMakerContract::class);
         if ($resource->decidesForAll('view', $resourceClassName)) {
             return $resourceClassName::withTrashed()->get();
         } else {
